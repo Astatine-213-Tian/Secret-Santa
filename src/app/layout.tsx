@@ -4,8 +4,8 @@ import { Providers } from "./providers"
 import "./globals.css"
 
 export const metadata: Metadata = {
-  title: "JStack App",
-  description: "Created using JStack",
+  title: "Secret Santa App",
+  description: "A nextjs app for secret santa",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 }
 
