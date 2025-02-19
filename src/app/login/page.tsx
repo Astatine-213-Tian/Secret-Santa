@@ -10,7 +10,7 @@ export default function LoginPage() {
           <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
             <Gift className="size-4" />
           </div>
-          Secret Santa.
+          Secret Santa
         </a>
         <LoginForm />
       </div>
