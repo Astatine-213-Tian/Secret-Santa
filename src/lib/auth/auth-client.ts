@@ -1,10 +1,11 @@
 import { createAuthClient } from "better-auth/react";
+import { redirect } from "next/navigation";
+
 const authClient = createAuthClient({
   baseURL: process.env.BETTER_AUTH_URL,
 });
 
-
-const CALLBACK_URL = "/"
+const CALLBACK_URL = "/";
 
 async function signInWithGoogle() {
   await authClient.signIn.social({
@@ -20,7 +21,13 @@ async function signInWithGitHub() {
   });
 }
 
-async function signInWithEmail({ email, password }: { email: string, password: string }) {
+async function signInWithEmail({
+  email,
+  password,
+}: {
+  email: string;
+  password: string;
+}) {
   await authClient.signIn.email({
     email,
     password,
@@ -28,7 +35,15 @@ async function signInWithEmail({ email, password }: { email: string, password: s
   });
 }
 
-async function signUpWithEmail({ email, password, name }: { email: string, password: string, name: string }) {
+async function signUpWithEmail({
+  email,
+  password,
+  name,
+}: {
+  email: string;
+  password: string;
+  name: string;
+}) {
   await authClient.signUp.email({
     email,
     password,
@@ -37,5 +52,16 @@ async function signUpWithEmail({ email, password, name }: { email: string, passw
   });
 }
 
-export const { useSession, getSession } = createAuthClient(); 
-export { signInWithGoogle, signInWithGitHub, signInWithEmail, signUpWithEmail };
+async function signOut() {
+  await authClient.signOut();
+  redirect("/");
+}
+
+export const { useSession, getSession } = createAuthClient();
+export {
+  signInWithGoogle,
+  signInWithGitHub,
+  signInWithEmail,
+  signUpWithEmail,
+  signOut,
+};
