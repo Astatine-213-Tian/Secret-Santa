@@ -1,4 +1,6 @@
+import { UserAvatar } from "@/components/UserAvatar";
 import { auth } from "@/lib/auth/auth";
+import { Gift } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -12,8 +14,23 @@ export default async function Home() {
   }
 
   return (
-    <div>
-      <h1>Welcome {session.user.name}</h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white border-b">
+        <div className="max-w-[2000px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center gap-4">
+              <Gift className="h-8 w-8 text-red-500" />
+              <span className="text-xl font-bold">Secret Santa</span>
+            </div>
+
+            <UserAvatar
+              name={session.user.name}
+              email={session.user.email}
+              image={session.user.image}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
