@@ -1,4 +1,4 @@
-import { UserAvatar } from "@/components/UserAvatar";
+import { UserAvatar } from "@/components/user-avatar";
 import { auth } from "@/lib/auth/auth";
 import { Gift } from "lucide-react";
 import { headers } from "next/headers";
