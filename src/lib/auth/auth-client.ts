@@ -2,7 +2,7 @@ import { createAuthClient } from "better-auth/react";
 import { redirect } from "next/navigation";
 
 const authClient = createAuthClient({
-  baseURL: process.env.BETTER_AUTH_URL,
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 });
 
 const CALLBACK_URL = "/";
@@ -57,7 +57,7 @@ async function signOut() {
   redirect("/");
 }
 
-export const { useSession, getSession } = createAuthClient();
+export const { useSession, getSession } = authClient;
 export {
   signInWithGoogle,
   signInWithGitHub,

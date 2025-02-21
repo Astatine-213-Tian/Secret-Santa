@@ -4,6 +4,7 @@ import { db } from "@/server/db";
 import { hashPassword, verifyPassword } from "../password";
 
 export const auth = betterAuth({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
@@ -29,8 +30,8 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 5 * 60 // 5 minutes
-    }
+      maxAge: 5 * 60, // 5 minutes
+    },
   },
   advanced: {
     generateId: false,
