@@ -1,4 +1,4 @@
-import { j } from "./jstack";
+import { j } from "./jstack"
 
 /**
  * This is your base API.
@@ -10,14 +10,14 @@ const api = j
   .router()
   .basePath("/api")
   .use(j.defaults.cors)
-  .onError(j.defaults.errorHandler);
+  .onError(j.defaults.errorHandler)
 
 /**
  * This is the main router for your server.
  * All routers in /server/routers should be added here manually.
  */
-const appRouter = j.mergeRouters(api, {});
+const appRouter = j.mergeRouters(api, {})
 
-export type AppRouter = typeof appRouter;
+export type AppRouter = typeof appRouter
 
-export default appRouter;
+export default appRouter

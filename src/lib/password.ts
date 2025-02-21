@@ -1,5 +1,5 @@
-import { scryptAsync } from "@noble/hashes/scrypt";
-import { randomBytes } from '@noble/hashes/utils';
+import { scryptAsync } from "@noble/hashes/scrypt"
+import { randomBytes } from "@noble/hashes/utils"
 
 // Scrypt parameters
 const config = {
@@ -7,7 +7,7 @@ const config = {
   r: 8,
   p: 1,
   dkLen: 32,
-};
+}
 
 async function generateKey(password: string, salt: string): Promise<string> {
   const derivedKey = await scryptAsync(password, salt, {
@@ -15,8 +15,8 @@ async function generateKey(password: string, salt: string): Promise<string> {
     r: config.r,
     p: config.p,
     dkLen: config.dkLen,
-  });
-  return Buffer.from(derivedKey).toString("hex");
+  })
+  return Buffer.from(derivedKey).toString("hex")
 }
 
 /**
@@ -26,13 +26,13 @@ async function generateKey(password: string, salt: string): Promise<string> {
  */
 export async function hashPassword(password: string): Promise<string> {
   // Generate a random salt (16 bytes)
-  const saltArray = randomBytes(16);
-  const salt = new TextDecoder().decode(saltArray);
+  const saltArray = randomBytes(16)
+  const salt = new TextDecoder().decode(saltArray)
 
   // Derive a key using scrypt
-  const key = await generateKey(password, salt);
+  const key = await generateKey(password, salt)
   // Store salt and hash separated by a colon
-  return `${salt}:${key}`;
+  return `${salt}:${key}`
 }
 
 /**
@@ -45,18 +45,18 @@ export async function verifyPassword({
   hash,
   password,
 }: {
-  hash: string;
-  password: string;
+  hash: string
+  password: string
 }): Promise<boolean> {
   // Split the stored string to get the salt and hash
-  const [salt, key] = hash.split(":");
+  const [salt, key] = hash.split(":")
   if (!salt || !hash) {
-    throw new Error("Invalid stored password");
+    throw new Error("Invalid stored password")
   }
 
   // Derive the key for the given password using the extracted salt
-  const targetKey = await generateKey(password, salt);
+  const targetKey = await generateKey(password, salt)
 
   // Compare the newly derived hash with the stored hash
-  return targetKey === key;
+  return targetKey === key
 }

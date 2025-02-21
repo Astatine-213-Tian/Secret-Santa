@@ -1,22 +1,23 @@
-"use client";
+"use client"
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import {
+  signInWithEmail,
+  signInWithGitHub,
+  signInWithGoogle,
+} from "@/lib/auth/auth-client"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { GitHub, Google } from "@/icons";
-import {
-  signInWithEmail,
-  signInWithGitHub,
-  signInWithGoogle,
-} from "@/lib/auth/auth-client";
-import { z } from "zod";
+} from "@/components/ui/card"
 import {
   Form,
   FormControl,
@@ -24,16 +25,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { GitHub, Google } from "@/icons"
 
 const formSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1, {
     message: "Password is required",
   }),
-});
+})
 
 export const LoginForm = ({
   className,
@@ -45,13 +46,13 @@ export const LoginForm = ({
       email: "",
       password: "",
     },
-  });
+  })
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     await signInWithEmail({
       email: values.email,
       password: values.password,
-    });
+    })
   }
 
   return (
@@ -151,5 +152,5 @@ export const LoginForm = ({
         and <a href="#">Privacy Policy</a>.
       </div>
     </div>
-  );
-};
+  )
+}

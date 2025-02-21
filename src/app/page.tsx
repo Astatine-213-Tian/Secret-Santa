@@ -1,16 +1,17 @@
-import { UserAvatar } from "@/components/user-avatar";
-import { auth } from "@/lib/auth/auth-server";
-import { Gift } from "lucide-react";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
+import { Gift } from "lucide-react"
+
+import { auth } from "@/lib/auth/auth-server"
+import { UserAvatar } from "@/components/user-avatar"
 
 export default async function Home() {
   const session = await auth.api.getSession({
     headers: await headers(),
-  });
+  })
 
   if (!session) {
-    redirect("/login");
+    redirect("/login")
   }
 
   return (
@@ -32,5 +33,5 @@ export default async function Home() {
         </div>
       </div>
     </div>
-  );
+  )
 }

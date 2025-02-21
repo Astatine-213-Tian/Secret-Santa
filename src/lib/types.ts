@@ -1,3 +1,3 @@
-interface UserProfile {
-  bio: string;
+export interface UserProfile {
+  bio: string
 }

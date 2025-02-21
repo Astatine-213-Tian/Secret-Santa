@@ -1,7 +1,8 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { db } from "@/server/db";
-import { hashPassword, verifyPassword } from "../password";
+import { betterAuth } from "better-auth"
+import { drizzleAdapter } from "better-auth/adapters/drizzle"
+
+import { db } from "@/server/db"
+import { hashPassword, verifyPassword } from "../password"
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -36,4 +37,4 @@ export const auth = betterAuth({
   advanced: {
     generateId: false,
   },
-});
+})

@@ -1,0 +1,6 @@
+# Inherit .gitignore
+!.gitignore
+**/.gitignore
+
+drizzle/**
+
