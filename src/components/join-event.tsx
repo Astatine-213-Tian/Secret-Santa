@@ -8,7 +8,7 @@ import { Button } from "./ui/button"
 
 export const JoinEvent = () => {
   // TODO: Remove this
-  const defaultJoinCode = "11111"
+  const defaultJoinCode = "123456"
 
   const handleJoinEvent = async () => {
     const result = await joinEvent({ joinCode: defaultJoinCode })

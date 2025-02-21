@@ -38,7 +38,8 @@ export async function createEvent({
       organizerId: userId,
     })
     .returning({ id: event.id })
-  db.insert(eventJoinCode).values({
+
+  await db.insert(eventJoinCode).values({
     eventId: newEvent[0]!.id,
   })
 
