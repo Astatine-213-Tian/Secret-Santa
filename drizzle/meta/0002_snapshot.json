@@ -1,5 +1,5 @@
 {
-  "id": "541b3620-7d56-492b-9eec-c4424b0e1e6a",
+  "id": "0777c211-4292-4f96-87cd-c7c849ae876a",
   "prevId": "5ff6c8b7-a6d3-4219-923c-8b965052079b",
   "version": "7",
   "dialect": "postgresql",
@@ -161,61 +161,22 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.event_admin": {
-      "name": "event_admin",
-      "schema": "",
-      "columns": {
-        "event_id": {
-          "name": "event_id",
+        },
+        "organizer_id": {
+          "name": "organizer_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "assigned_at": {
-          "name": "assigned_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "event_admin_event_id_event_id_fk": {
-          "name": "event_admin_event_id_event_id_fk",
-          "tableFrom": "event_admin",
-          "tableTo": "event",
-          "columnsFrom": [
-            "event_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "event_admin_user_id_user_id_fk": {
-          "name": "event_admin_user_id_user_id_fk",
-          "tableFrom": "event_admin",
+        "event_organizer_id_user_id_fk": {
+          "name": "event_organizer_id_user_id_fk",
+          "tableFrom": "event",
           "tableTo": "user",
           "columnsFrom": [
-            "user_id"
+            "organizer_id"
           ],
           "columnsTo": [
             "id"
@@ -224,15 +185,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "event_admin_event_id_user_id_pk": {
-          "name": "event_admin_event_id_user_id_pk",
-          "columns": [
-            "event_id",
-            "user_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
@@ -308,7 +261,7 @@
             }
           ],
           "isUnique": true,
-          "where": "\"event_join_code\".\"is_valid\" = $1",
+          "where": "\"event_join_code\".\"is_valid\" = true",
           "concurrently": false,
           "method": "btree",
           "with": {}

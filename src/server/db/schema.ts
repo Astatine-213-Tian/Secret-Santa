@@ -80,6 +80,9 @@ export const event = pgTable("event", {
   drawDate: timestamp("draw_date").notNull(),
   location: text("location").notNull(),
   budget: integer("budget").notNull(),
+  organizerId: text("organizer_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
 })
 
 export const eventJoinCode = pgTable(
@@ -111,20 +114,6 @@ export const eventParticipant = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     joinedAt: timestamp("joined_at").notNull().defaultNow(),
-  },
-  (table) => [primaryKey({ columns: [table.eventId, table.userId] })]
-)
-
-export const eventAdmin = pgTable(
-  "event_admin",
-  {
-    eventId: text("event_id")
-      .notNull()
-      .references(() => event.id, { onDelete: "cascade" }),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    assignedAt: timestamp("assigned_at").notNull().defaultNow(),
   },
   (table) => [primaryKey({ columns: [table.eventId, table.userId] })]
 )

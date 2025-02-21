@@ -4,13 +4,7 @@ import { and, count, desc, eq, gte, sql } from "drizzle-orm"
 
 import { getUserId } from "@/lib/auth/auth-server"
 import { db } from "@/server/db"
-import {
-  event,
-  eventAdmin,
-  eventParticipant,
-  santaPair,
-  user,
-} from "@/server/db/schema"
+import { event, eventParticipant, santaPair, user } from "@/server/db/schema"
 
 export async function getOrganizedEvents() {
   const userId = await getUserId()
@@ -24,12 +18,8 @@ export async function getOrganizedEvents() {
       location: event.location,
       participantsNum: count(eventParticipant.userId),
     })
-    .from(eventAdmin)
-    .where(eq(eventAdmin.userId, userId))
-    .innerJoin(
-      event,
-      and(eq(eventAdmin.eventId, event.id), gte(event.eventDate, new Date()))
-    )
+    .from(event)
+    .where(and(eq(event.organizerId, userId), gte(event.eventDate, new Date())))
     .leftJoin(eventParticipant, eq(event.id, eventParticipant.eventId))
     .groupBy(event.id)
     .orderBy(desc(event.eventDate))

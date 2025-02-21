@@ -5,12 +5,7 @@ import { and, eq } from "drizzle-orm"
 
 import { getUserId } from "@/lib/auth/auth-server"
 import { db } from "../db"
-import {
-  event,
-  eventAdmin,
-  eventJoinCode,
-  eventParticipant,
-} from "../db/schema"
+import { event, eventJoinCode, eventParticipant } from "../db/schema"
 
 interface CreateEventProps {
   name: string
@@ -40,17 +35,12 @@ export async function createEvent({
       eventDate,
       drawDate,
       location,
+      organizerId: userId,
     })
     .returning({ id: event.id })
-  await Promise.all([
-    db.insert(eventJoinCode).values({
-      eventId: newEvent[0]!.id,
-    }),
-    db.insert(eventAdmin).values({
-      eventId: newEvent[0]!.id,
-      userId: userId,
-    }),
-  ])
+  db.insert(eventJoinCode).values({
+    eventId: newEvent[0]!.id,
+  })
 
   revalidatePath("/")
 }
