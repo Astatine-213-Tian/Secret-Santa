@@ -1,3 +1,4 @@
+import { headers } from "next/headers"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 
@@ -38,3 +39,13 @@ export const auth = betterAuth({
     generateId: false,
   },
 })
+
+export async function getUserId() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+  if (!session) {
+    throw new Error("Unauthorized")
+  }
+  return session.user.id
+}
