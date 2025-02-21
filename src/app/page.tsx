@@ -1,50 +1,14 @@
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { CirclePlus, Gift } from "lucide-react"
+import { Gift } from "lucide-react"
 
 import { auth } from "@/lib/auth/auth-server"
-import { Button } from "@/components/ui/button"
+import { getJoinedEvents, getOrganizedEvents } from "@/server/queries/event"
+import { CreateEvent } from "@/components/create-event"
+import { JoinEvent } from "@/components/join-event"
 import { JoinedEventCard } from "@/components/joined-event-card"
 import { OrganizedEventCard } from "@/components/organized-event-card"
 import { UserAvatar } from "@/components/user-avatar"
-
-const joinedEvents = [
-  {
-    name: "Christmas 2024",
-    eventId: "123",
-    date: new Date("2024-12-25"),
-    location: "123 Main St, Anytown, USA",
-    organizer: "John Doe",
-    secretFriend: "Jane Smith",
-  },
-  {
-    name: "New Year 2025",
-    eventId: "456",
-    date: new Date("2025-01-01"),
-    location: "456 Main St, Anytown, USA",
-    organizer: "John Doe",
-    secretFriend: "Jane Smith",
-  },
-  {
-    name: "Valentine's Day 2025",
-    eventId: "789",
-    date: new Date("2025-02-14"),
-    location: "789 Main St, Anytown, USA",
-    organizer: "John Doe",
-    secretFriend: "Jane Smith",
-  },
-]
-
-const organizedEvents = [
-  {
-    name: "Christmas 2024",
-    eventId: "123",
-    eventDate: new Date("2024-12-25"),
-    location: "123 Main St, Anytown, USA",
-    participantsNumber: 10,
-    drawDate: new Date("2024-12-20"),
-  },
-]
 
 export default async function Home() {
   const session = await auth.api.getSession({
@@ -54,6 +18,9 @@ export default async function Home() {
   if (!session) {
     redirect("/login")
   }
+
+  const organizedEvents = await getOrganizedEvents()
+  const joinedEvents = await getJoinedEvents()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -79,10 +46,7 @@ export default async function Home() {
           <h2 className="text-xl font-semibold text-gray-900">
             Events You're Organizing
           </h2>
-          <Button variant="outline">
-            <CirclePlus className="w-4 h-4" />
-            Create New Event
-          </Button>
+          <CreateEvent />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {organizedEvents.map((event) => (
@@ -94,10 +58,7 @@ export default async function Home() {
           <h2 className="text-xl font-semibold text-gray-900">
             Events You're Participating In
           </h2>
-          <Button variant="outline">
-            <CirclePlus className="w-4 h-4" />
-            Join New Event
-          </Button>
+          <JoinEvent />
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {joinedEvents.map((event) => (

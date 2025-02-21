@@ -15,6 +15,13 @@
       "when": 1740012996520,
       "tag": "0001_good_star_brand",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1740135414102,
+      "tag": "0002_dazzling_omega_flight",
+      "breakpoints": true
     }
   ]
 }

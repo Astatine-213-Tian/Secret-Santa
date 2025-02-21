@@ -10,7 +10,7 @@ interface OrganizedEventCardProps {
   eventId: string
   eventDate: Date
   location: string
-  participantsNumber: number
+  participantsNum: number
   drawDate: Date
 }
 
@@ -19,7 +19,7 @@ export const OrganizedEventCard = ({
   eventId,
   eventDate,
   location,
-  participantsNumber,
+  participantsNum,
   drawDate,
 }: OrganizedEventCardProps) => {
   return (
@@ -38,7 +38,7 @@ export const OrganizedEventCard = ({
         <div className="space-y-2">
           <p className="text-sm text-gray-600 flex items-center">
             <Hash className="w-4 h-4 mr-1" />
-            <span className="font-medium">{participantsNumber}</span>
+            <span className="font-medium">{participantsNum}</span>
             &nbsp;participants
           </p>
           <p className="text-sm text-gray-600 flex items-center">
