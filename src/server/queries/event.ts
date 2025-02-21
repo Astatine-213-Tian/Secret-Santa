@@ -34,8 +34,6 @@ export async function getOrganizedEvents() {
     .groupBy(event.id)
     .orderBy(desc(event.eventDate))
 
-  console.log(events)
-
   return events
 }
 
