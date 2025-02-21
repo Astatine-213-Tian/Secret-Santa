@@ -30,14 +30,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const formSchema = z.object({
   email: z.string().email(),
-  password: z
-    .string()
-    .min(8, {
-      message: "Password must be at least 8 characters",
-    })
-    .max(16, {
-      message: "Password must be at most 16 characters",
-    }),
+  password: z.string().min(1, {
+    message: "Password is required",
+  }),
 });
 
 export const LoginForm = ({
@@ -157,4 +152,4 @@ export const LoginForm = ({
       </div>
     </div>
   );
-}
+};
