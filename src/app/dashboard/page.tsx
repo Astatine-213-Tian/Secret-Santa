@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 import CardGrid from "@/components/ui/cardGrid";
 import EventsSection from "@/components/ui/eventSection";
@@ -51,6 +52,24 @@ export default function DashboardPage() {
     },
   ];
 
+  const dummyEvents = [
+    {
+      id: "1",
+      name: "Tech Conference 2024",
+      date: "2024-06-15",
+      location: "San Francisco",
+      description: "Annual technology conference",
+    },
+    {
+      id: "2",
+      name: "Music Festival",
+      date: "2024-07-20",
+      location: "Austin",
+      description: "Summer music festival",
+    },
+    // Add more events as needed
+  ];
+
   return (
     <main className="max-w-7xl mx-auto p-6">
       {/* Top Bar */}
@@ -66,15 +85,33 @@ export default function DashboardPage() {
 
       {/* Cards Section */}
       <CardGrid />
-
       {/* Organized Events */}
-      <EventsSection title="Events You Organize" events={organizedEvents} />
-
+      <EventsSection title="Events You Organize" events={organizedEvents}>
+        {organizedEvents.map((event) => (
+          <Link
+            key={event.id}
+            href={`/${event.id}/view`}
+            className="block hover:bg-gray-50"
+          >
+            {/* Your existing event card content */}
+          </Link>
+        ))}
+      </EventsSection>
       {/* Participating Events */}
       <EventsSection
         title="Events You're Participating In"
         events={participatingEvents}
-      />
+      >
+        {participatingEvents.map((event) => (
+          <Link
+            key={event.id}
+            href={`/${event.id}/view`}
+            className="block hover:bg-gray-50"
+          >
+            {/* Your existing event card content */}
+          </Link>
+        ))}
+      </EventsSection>
     </main>
   );
 }

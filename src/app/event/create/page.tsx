@@ -10,6 +10,14 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
+export interface Event {
+  id: string;
+  name: string;
+  date: string;
+  location: string;
+  description: string;
+}
+
 export default function CreateEventPage() {
   const router = useRouter();
   const [eventData, setEventData] = useState({
