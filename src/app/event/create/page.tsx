@@ -17,6 +17,7 @@ export interface Event {
   location: string;
   description: string;
 }
+//
 
 export default function CreateEventPage() {
   const router = useRouter();
