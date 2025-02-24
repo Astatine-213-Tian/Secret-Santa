@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { CirclePlus } from "lucide-react"
+import { Gift } from "lucide-react"
 import { toast } from "sonner"
 
 import { joinEvent } from "@/server/actions/event"
@@ -16,7 +16,7 @@ import {
 } from "./ui/dialog"
 import { Input } from "./ui/input"
 
-export const JoinEvent = () => {
+export const JoinEventButton = () => {
   const [open, setOpen] = useState(false)
 
   const handleJoinEvent = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,9 +35,9 @@ export const JoinEvent = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <CirclePlus className="w-4 h-4" />
-          Join New Event
+        <Button size="lg" className="px-6">
+          <Gift className="w-4 h-4" />
+          Join an Event
         </Button>
       </DialogTrigger>
       <DialogContent>
