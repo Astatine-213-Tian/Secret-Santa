@@ -1,22 +1,23 @@
-"use client";
+"use client"
 
-import { UserCircle, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Image from "next/image"
+import { LogOut, UserCircle } from "lucide-react"
+
+import { signOut } from "@/lib/auth/auth-client"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { signOut } from "@/lib/auth/auth-client";
+} from "@/components/ui/dropdown-menu"
 
 interface UserAvatarProps extends React.ComponentPropsWithoutRef<"button"> {
-  name: string;
-  email: string;
-  image: string | null | undefined;
+  name: string
+  email: string
+  image: string | null | undefined
 }
 
 export const UserAvatar = ({
@@ -59,5 +60,5 @@ export const UserAvatar = ({
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
-};
+  )
+}
