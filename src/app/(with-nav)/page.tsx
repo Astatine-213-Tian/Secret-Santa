@@ -1,10 +1,13 @@
 import { headers } from "next/headers"
+import Link from "next/link"
 import { redirect } from "next/navigation"
+import { CirclePlus } from "lucide-react"
 
 import { auth } from "@/lib/auth/auth-server"
+import { cn } from "@/lib/utils"
 import { getJoinedEvents, getOrganizedEvents } from "@/server/queries/event"
+import { buttonVariants } from "@/components/ui/button"
 import CardGrid from "@/components/card-grid"
-import { CreateEvent } from "@/components/create-event"
 import { JoinEvent } from "@/components/join-event"
 import { JoinedEventCard } from "@/components/joined-event-card"
 import { OrganizedEventCard } from "@/components/organized-event-card"
@@ -29,7 +32,14 @@ export default async function Home() {
           <h2 className="text-xl font-semibold text-gray-900">
             Events You're Organizing
           </h2>
-          <CreateEvent />
+
+          <Link
+            href="/event/create"
+            className={cn(buttonVariants({ variant: "outline" }))}
+          >
+            <CirclePlus className="w-4 h-4" />
+            Create New Event
+          </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {organizedEvents.map((event) => (

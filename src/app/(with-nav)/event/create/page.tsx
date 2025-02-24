@@ -1,120 +1,173 @@
 "use client"
 
-import { useState } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
+import { cn } from "@/lib/utils"
 import { createEvent } from "@/server/actions/event"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { FormDatePicker } from "@/components/ui/form-date-picker"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
 
-export interface Event {
-  id: string
-  name: string
-  date: string
-  location: string
-  description: string
-}
-
-const addDays = (date: Date, days: number) => {
-  const newDate = new Date(date)
-  newDate.setDate(newDate.getDate() + days)
-  return newDate
-}
+const formSchema = z
+  .object({
+    name: z.string().min(1, "Name is required"),
+    location: z.string().min(1, "Location is required"),
+    description: z.string().min(1, "Description is required"),
+    budget: z
+      .number({
+        required_error: "Budget is required",
+      })
+      .min(0, "Budget should be greater than 0"),
+    eventDate: z.date({
+      required_error: "Event date is required",
+    }),
+    drawDate: z.date({
+      required_error: "Draw date is required",
+    }),
+  })
+  .refine((data) => data.drawDate < data.eventDate, {
+    message: "Draw date should be before event date",
+    path: ["drawDate"],
+  })
 
 export default function CreateEventPage() {
   const router = useRouter()
-  const [eventData, setEventData] = useState({
-    name: "",
-    date: "",
-    location: "",
-    description: "",
-    budget: 0,
-    eventDate: addDays(new Date(), 3),
-    drawDate: addDays(new Date(), 2),
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      location: "",
+      description: "",
+      budget: 0,
+      eventDate: undefined,
+      drawDate: undefined,
+    },
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const eventId = await createEvent(eventData)
+  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+    const eventId = await createEvent(data)
     router.push(`/event/${eventId}}`)
-  }
-
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target
-    setEventData((prev) => ({ ...prev, [name]: value }))
   }
 
   return (
     <main className="max-w-3xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Create New Event</h1>
-        <Button onClick={() => router.back()}>Back</Button>
+        <Link
+          href="/"
+          className={cn(buttonVariants({ variant: "default" }), "mt-4")}
+        >
+          Back
+        </Link>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="name" className="block mb-2">
-            Event Name
-          </label>
-          <input
-            type="text"
-            id="name"
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <FormField
+            control={form.control}
             name="name"
-            value={eventData.name}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Event Name</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div>
-          <label htmlFor="date" className="block mb-2">
-            Date
-          </label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={eventData.date}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
+          <FormField
+            control={form.control}
+            name="eventDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Event Date</FormLabel>
+                <FormDatePicker field={field} />
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div>
-          <label htmlFor="location" className="block mb-2">
-            Location
-          </label>
-          <input
-            type="text"
-            id="location"
+          <FormField
+            control={form.control}
+            name="drawDate"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Draw Date</FormLabel>
+                <FormDatePicker field={field} />
+                <FormDescription>
+                  The date when participants will be randomly assigned their
+                  secret gift recipients.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="location"
-            value={eventData.location}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Location</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+              </FormItem>
+            )}
           />
-        </div>
 
-        <div>
-          <label htmlFor="description" className="block mb-2">
-            Description
-          </label>
-          <textarea
-            id="description"
+          <FormField
+            control={form.control}
             name="description"
-            value={eventData.description}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            rows={4}
-            required
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+              </FormItem>
+            )}
           />
-        </div>
 
-        <Button type="submit">Create Event</Button>
-      </form>
+          <FormField
+            control={form.control}
+            name="budget"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Budget</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(Number(e.target.value))
+                    }}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit">Create Event</Button>
+        </form>
+      </Form>
     </main>
   )
 }
