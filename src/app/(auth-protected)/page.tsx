@@ -1,9 +1,6 @@
-import { headers } from "next/headers"
 import Link from "next/link"
-import { redirect } from "next/navigation"
 import { CirclePlus } from "lucide-react"
 
-import { auth } from "@/lib/auth/auth-server"
 import { cn } from "@/lib/utils"
 import { getJoinedEvents, getOrganizedEvents } from "@/server/queries/event"
 import { buttonVariants } from "@/components/ui/button"
@@ -13,14 +10,6 @@ import { JoinedEventCard } from "@/components/joined-event-card"
 import { OrganizedEventCard } from "@/components/organized-event-card"
 
 export default async function Home() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
-
-  if (!session) {
-    redirect("/login")
-  }
-
   const organizedEvents = await getOrganizedEvents()
   const joinedEvents = await getJoinedEvents()
 

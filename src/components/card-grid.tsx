@@ -38,7 +38,7 @@ export default function CardGrid() {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8">
       {cardData.map((card, index) => (
         <Link href={card.href} key={index}>
-          <Card className="transition-all hover:scale-[1.02] hover:shadow-lg">
+          <Card>
             <CardHeader>
               <CardTitle>{card.title}</CardTitle>
               <CardDescription>{card.description}</CardDescription>
