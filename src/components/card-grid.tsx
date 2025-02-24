@@ -1,12 +1,14 @@
-"use client";
-import React from "react";
+"use client"
+
+import React from "react"
+import Link from "next/link"
+
 import {
   Card,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import Link from "next/link";
+} from "@/components/ui/card"
 
 const cardData = [
   {
@@ -29,7 +31,7 @@ const cardData = [
     description: "See upcoming events",
     href: "/calendar",
   },
-];
+]
 
 export default function CardGrid() {
   return (
@@ -45,5 +47,5 @@ export default function CardGrid() {
         </Link>
       ))}
     </div>
-  );
+  )
 }

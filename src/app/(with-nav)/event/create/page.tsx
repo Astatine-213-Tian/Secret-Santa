@@ -1,57 +1,55 @@
-"use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  CardFooter,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+
+import { createEvent } from "@/server/actions/event"
+import { Button } from "@/components/ui/button"
 
 export interface Event {
-  id: string;
-  name: string;
-  date: string;
-  location: string;
-  description: string;
+  id: string
+  name: string
+  date: string
+  location: string
+  description: string
 }
-//
+
+const addDays = (date: Date, days: number) => {
+  const newDate = new Date(date)
+  newDate.setDate(newDate.getDate() + days)
+  return newDate
+}
 
 export default function CreateEventPage() {
-  const router = useRouter();
+  const router = useRouter()
   const [eventData, setEventData] = useState({
     name: "",
     date: "",
     location: "",
     description: "",
-  });
+    budget: 0,
+    eventDate: addDays(new Date(), 3),
+    drawDate: addDays(new Date(), 2),
+  })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Pass the event data directly through the URL
-    const searchParams = new URLSearchParams(eventData);
-    router.push(`/event/preview?${searchParams.toString()}`);
-  };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    const eventId = await createEvent(eventData)
+    router.push(`/event/${eventId}}`)
+  }
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setEventData((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setEventData((prev) => ({ ...prev, [name]: value }))
+  }
 
   return (
     <main className="max-w-3xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">Create New Event</h1>
-        <button
-          onClick={() => router.back()}
-          className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
-        >
-          Back
-        </button>
+        <Button onClick={() => router.back()}>Back</Button>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -115,13 +113,8 @@ export default function CreateEventPage() {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
-          Create Event
-        </button>
+        <Button type="submit">Create Event</Button>
       </form>
     </main>
-  );
+  )
 }

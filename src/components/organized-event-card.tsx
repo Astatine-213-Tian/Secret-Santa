@@ -59,7 +59,7 @@ export const OrganizedEventCard = ({
           </p>
         </div>
         <Link
-          href={`/events/${eventId}`}
+          href={`/event/${eventId}`}
           className={cn(buttonVariants({ variant: "default" }), "mt-4")}
         >
           Manage

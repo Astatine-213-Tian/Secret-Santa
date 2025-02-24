@@ -1,36 +1,39 @@
-"use client";
-import React, { useState } from "react";
+"use client"
+
+import React, { useState } from "react"
+
+import { Button } from "@/components/ui/button"
 import {
   Card,
-  CardHeader,
   CardContent,
-  CardFooter,
-  CardTitle,
   CardDescription,
-} from "@/components/ui/card";
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 export default function ProfilePage() {
   // Dummy initial profile data – in a real app, fetch this from your API.
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(false)
   const [profile, setProfile] = useState({
     fullName: "John Doe",
     email: "john.doe@example.com",
     address: "123 Main Street, City, Country",
     giftPreferences: "Books, Gadgets",
-  });
+  })
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setProfile((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setProfile((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleSave = () => {
     // TODO: Save updated profile to backend with proper secure API call.
-    console.log("Profile saved", profile);
-    setEditMode(false);
-  };
+    console.log("Profile saved", profile)
+    setEditMode(false)
+  }
 
   return (
     <main className="max-w-3xl mx-auto p-6">
@@ -131,29 +134,18 @@ export default function ProfilePage() {
         <CardFooter className="flex justify-end space-x-2">
           {editMode ? (
             <>
-              <button
-                onClick={() => setEditMode(false)}
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-              >
+              <Button onClick={() => setEditMode(false)} variant="outline">
                 Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-              >
-                Save
-              </button>
+              </Button>
+              <Button onClick={handleSave}>Save</Button>
             </>
           ) : (
-            <button
-              onClick={() => setEditMode(true)}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
+            <Button onClick={() => setEditMode(true)} variant="outline">
               Edit Profile
-            </button>
+            </Button>
           )}
         </CardFooter>
       </Card>
     </main>
-  );
+  )
 }
