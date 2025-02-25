@@ -28,10 +28,8 @@ const formSchema = z
     location: z.string().min(1, "Location is required"),
     description: z.string().min(1, "Description is required"),
     budget: z
-      .number({
-        required_error: "Budget is required",
-      })
-      .min(0, "Budget should be greater than 0"),
+      .number({ required_error: "Budget is required" })
+      .min(1, "Budget should be greater than 0"),
     eventDate: z.date({
       required_error: "Event date is required",
     }),
@@ -156,8 +154,19 @@ export default function CreateEventPage() {
                     type="number"
                     {...field}
                     onChange={(e) => {
-                      field.onChange(Number(e.target.value))
+                      const newVal = e.target.value
+                      if (newVal === "") {
+                        field.onChange(null)
+                        return
+                      }
+                      field.onChange(Number(newVal))
                     }}
+                    onBlur={(e) => {
+                      if (e.target.value === "") {
+                        field.onChange(0)
+                      }
+                    }}
+                    value={field.value === null ? "" : field.value}
                   />
                 </FormControl>
                 <FormMessage />
