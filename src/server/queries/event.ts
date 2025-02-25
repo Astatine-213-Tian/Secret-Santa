@@ -57,3 +57,23 @@ export async function getJoinedEvents() {
 
   return events
 }
+
+export async function getEvent(eventId: string) {
+  const userId = await getUserId()
+  // Get the specific event
+  const events = await db
+    .select() // select all columns
+    .from(event)
+    .where(
+      and(
+        eq(event.id, eventId), // only want ONE specific event
+        eq(event.organizerId, userId) // make sure they are the organizer (secure; just in case)
+      )
+    )
+
+  if (events.length === 0) {
+    throw new Error("Could not find the event with the given ID")
+  }
+
+  return events[0]
+}

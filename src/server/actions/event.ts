@@ -7,34 +7,22 @@ import { getUserId } from "@/lib/auth/auth-server"
 import { db } from "../db"
 import { event, eventJoinCode, eventParticipant } from "../db/schema"
 
-interface CreateEventProps {
+export interface EditableEventDetails {
   name: string
+  location: string
   description: string
   budget: number
   eventDate: Date
   drawDate: Date
-  location: string
 }
 
-export async function createEvent({
-  name,
-  description,
-  budget,
-  eventDate,
-  drawDate,
-  location,
-}: CreateEventProps) {
+export async function createEvent(ev: EditableEventDetails) {
   const userId = await getUserId()
 
   const newEvent = await db
     .insert(event)
     .values({
-      name,
-      description,
-      budget,
-      eventDate,
-      drawDate,
-      location,
+      ...ev,
       organizerId: userId,
     })
     .returning({ id: event.id })
@@ -48,6 +36,34 @@ export async function createEvent({
   revalidatePath("/")
 
   return eventId
+}
+
+export async function updateEvent(eventId: string, ev: EditableEventDetails) {
+  const userId = await getUserId()
+
+  await db
+    .update(event)
+    .set({
+      name: ev.name,
+      description: ev.description,
+      budget: ev.budget,
+      eventDate: ev.eventDate,
+      drawDate: ev.drawDate,
+      location: ev.location,
+    })
+    .where(and(eq(event.id, eventId), eq(event.organizerId, userId)))
+
+  // revalidatePath("/")
+}
+
+export async function deleteEvent(eventId: string) {
+  const userId = await getUserId()
+
+  await db
+    .delete(event)
+    .where(and(eq(event.id, eventId), eq(event.organizerId, userId)))
+
+  // revalidatePath("/")
 }
 
 interface JoinEventProps {
