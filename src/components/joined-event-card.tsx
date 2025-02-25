@@ -53,7 +53,7 @@ export const JoinedEventCard = ({
           </p>
         </div>
         <Link
-          href={`/events/${eventId}`}
+          href={`/event/${eventId}`}
           className={cn(buttonVariants({ variant: "default" }), "mt-4")}
         >
           View

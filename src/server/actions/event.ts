@@ -39,11 +39,15 @@ export async function createEvent({
     })
     .returning({ id: event.id })
 
+  const eventId = newEvent[0]!.id
+
   await db.insert(eventJoinCode).values({
-    eventId: newEvent[0]!.id,
+    eventId,
   })
 
   revalidatePath("/")
+
+  return eventId
 }
 
 interface JoinEventProps {
