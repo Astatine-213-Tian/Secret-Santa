@@ -32,7 +32,7 @@ export const formSchema = z
     eventDate: z.date({ required_error: "Event date is required" }),
     drawDate: z.date({ required_error: "Draw date is required" }),
   })
-  .refine((data) => data.drawDate < data.eventDate, {
+  .refine((data) => data.drawDate <= data.eventDate, {
     message: "Draw date should be before event date",
     path: ["drawDate"],
   })
@@ -63,8 +63,8 @@ export const EventForm = (params: {
     },
   })
 
-  // Can only submit if changed data || form is valid
-  const submitDisabled = !form.formState.isDirty || !form.formState.isValid
+  // Can only submit if changed data
+  const submitDisabled = !form.formState.isDirty
 
   return (
     <Form {...form}>
