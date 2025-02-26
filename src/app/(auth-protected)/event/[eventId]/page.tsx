@@ -1,7 +1,5 @@
-import Link from "next/link"
 import { redirect } from "next/navigation"
 
-import { cn } from "@/lib/utils"
 import {
   deleteEvent,
   EditableEventDetails,
@@ -9,9 +7,9 @@ import {
 } from "@/server/actions/event"
 import { EventSchema } from "@/server/db/schema"
 import { getEvent } from "@/server/queries/event"
-import { Button, buttonVariants } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { EventForm } from "../../../../components/eventForm"
+import { EventForm } from "@/components/event-detail-form"
 
 /**
  * @param params - { eventId } that we want to view the details of
@@ -48,12 +46,6 @@ export default async function EventDetailsPage({
     <main className="max-w-3xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold">{ui_parts.heading}</h1>
-        <Link
-          href="/"
-          className={cn(buttonVariants({ variant: "default" }), "mt-4")}
-        >
-          Back
-        </Link>
       </div>
       {ui_parts.content}
     </main>

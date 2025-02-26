@@ -64,28 +64,23 @@ export async function getJoinedEvents() {
   return events
 }
 
-// TODO: should we have seperate queries for the organizer and the participant?
+// TODO: should we have separate queries for the organizer and the participant?
 export async function getEvent(eventId: string): Promise<{
   details: EventSchema
   isOrganizer: boolean
 }> {
   // Get the specific event
-  const events = await db
+  const result = await db
     .select() // select all columns
     .from(event)
-    .where(eq(event.id, eventId)) // only want ONE specific event
+    .where(eq(event.id, eventId))
+    .limit(1)
 
-  if (events.length !== 1) {
-    throw new Error(
-      `Expected exactly one event, but got ${events.length} when searching for event with id ${eventId}`
-    )
+  if (result.length === 0) {
+    throw new Error("Event not found")
   }
 
-  const details = events[0]
-
-  if (!details) {
-    throw new Error("Event not found or you are not the organizer")
-  }
+  const details = result[0]!
 
   const isOrganizer = details.organizerId === (await getUserId())
 
