@@ -11,7 +11,7 @@ import { EventSchema } from "@/server/db/schema"
 import { getEvent } from "@/server/queries/event"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { EventForm } from "../eventForm"
+import { EventForm } from "../../../../components/eventForm"
 
 /**
  * @param params - { eventId } that we want to view the details of

@@ -7,7 +7,7 @@ import { z } from "zod"
 import { cn } from "@/lib/utils"
 import { createEvent } from "@/server/actions/event"
 import { buttonVariants } from "@/components/ui/button"
-import { EventForm, formSchema } from "../eventForm"
+import { EventForm, formSchema } from "../../../../components/eventForm"
 
 export default function CreateEventPage() {
   const router = useRouter()
