@@ -4,7 +4,13 @@ import { and, count, desc, eq, gte, sql } from "drizzle-orm"
 
 import { getUserId } from "@/lib/auth/auth-server"
 import { db } from "@/server/db"
-import { event, eventParticipant, santaPair, user } from "@/server/db/schema"
+import {
+  event,
+  eventParticipant,
+  EventSchema,
+  santaPair,
+  user,
+} from "@/server/db/schema"
 
 export async function getOrganizedEvents() {
   const userId = await getUserId()
@@ -58,22 +64,30 @@ export async function getJoinedEvents() {
   return events
 }
 
-export async function getEvent(eventId: string) {
-  const userId = await getUserId()
+// TODO: should we have seperate queries for the organizer and the participant?
+export async function getEvent(eventId: string): Promise<{
+  details: EventSchema
+  isOrganizer: boolean
+}> {
   // Get the specific event
   const events = await db
     .select() // select all columns
     .from(event)
-    .where(
-      and(
-        eq(event.id, eventId), // only want ONE specific event
-        eq(event.organizerId, userId) // make sure they are the organizer (secure; just in case)
-      )
-    )
+    .where(eq(event.id, eventId)) // only want ONE specific event
 
-  if (events.length === 0) {
-    throw new Error("Could not find the event with the given ID")
+  if (events.length !== 1) {
+    throw new Error(
+      `Expected exactly one event, but got ${events.length} when searching for event with id ${eventId}`
+    )
   }
 
-  return events[0]
+  const details = events[0]
+
+  if (!details) {
+    throw new Error("Event not found or you are not the organizer")
+  }
+
+  const isOrganizer = details.organizerId === (await getUserId())
+
+  return { details, isOrganizer }
 }

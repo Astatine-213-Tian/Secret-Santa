@@ -15,7 +15,7 @@ export default function CreateEventPage() {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     // Create the event and navigate to the event management page
     const eventId = await createEvent(data)
-    router.push(`/event/${eventId}}`) // TODO: should we do this? or redirect to the home page?
+    router.push("/") // before: router.push(`/event/${eventId}}`)
   }
 
   return (

@@ -1,6 +1,7 @@
+// Defines a component – a form to fill/modify event details to edit/create an event
+
 "use client"
 
-// Defines the component which provides a form to edit/create a new event
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -28,12 +29,8 @@ export const formSchema = z
     budget: z
       .number({ required_error: "Budget is required" })
       .min(1, "Budget should be greater than 0"),
-    eventDate: z.date({
-      required_error: "Event date is required",
-    }),
-    drawDate: z.date({
-      required_error: "Draw date is required",
-    }),
+    eventDate: z.date({ required_error: "Event date is required" }),
+    drawDate: z.date({ required_error: "Draw date is required" }),
   })
   .refine((data) => data.drawDate < data.eventDate, {
     message: "Draw date should be before event date",
@@ -65,6 +62,9 @@ export const EventForm = (params: {
       drawDate: undefined,
     },
   })
+
+  // Can only submit if changed data || form is valid
+  const submitDisabled = !form.formState.isDirty || !form.formState.isValid
 
   return (
     <Form {...form}>
@@ -171,7 +171,9 @@ export const EventForm = (params: {
           )}
         />
 
-        <Button type="submit">{params.submitButtonText}</Button>
+        <Button type="submit" disabled={submitDisabled}>
+          {params.submitButtonText}
+        </Button>
       </form>
     </Form>
   )

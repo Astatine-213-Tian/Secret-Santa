@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm"
+import { InferSelectModel, sql } from "drizzle-orm"
 import {
   boolean,
   index,
@@ -84,6 +84,7 @@ export const event = pgTable("event", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 })
+export type EventSchema = InferSelectModel<typeof event>
 
 export const eventJoinCode = pgTable(
   "event_join_code",
