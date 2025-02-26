@@ -52,6 +52,8 @@ export async function updateEvent(eventId: string, ev: EditableEventDetails) {
       location: ev.location,
     })
     .where(and(eq(event.id, eventId), eq(event.organizerId, userId)))
+
+  revalidatePath("/")
 }
 
 export async function deleteEvent(eventId: string) {
@@ -60,6 +62,8 @@ export async function deleteEvent(eventId: string) {
   await db
     .delete(event)
     .where(and(eq(event.id, eventId), eq(event.organizerId, userId)))
+
+  revalidatePath("/")
 }
 
 interface JoinEventProps {
