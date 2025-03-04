@@ -27,7 +27,7 @@ async function generateKey(password: string, salt: string): Promise<string> {
 export async function hashPassword(password: string): Promise<string> {
   // Generate a random salt (16 bytes)
   const saltArray = randomBytes(16)
-  const salt = new TextDecoder().decode(saltArray)
+  const salt = Buffer.from(saltArray).toString("hex")
 
   // Derive a key using scrypt
   const key = await generateKey(password, salt)

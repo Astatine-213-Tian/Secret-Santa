@@ -44,7 +44,7 @@ async function signUpWithEmail({
   password: string
   name: string
 }) {
-  await authClient.signUp.email({
+  return await authClient.signUp.email({
     email,
     password,
     name,
@@ -54,7 +54,7 @@ async function signUpWithEmail({
 
 async function signOut() {
   await authClient.signOut()
-  redirect("/")
+  redirect("/login")
 }
 
 export const { useSession, getSession } = authClient

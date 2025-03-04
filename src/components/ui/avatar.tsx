@@ -29,7 +29,6 @@ export const Avatar = ({ src, alt, size = 48 }: AvatarProps) => {
 const stringToColor = (str: string) => {
   const colors = [
     "bg-blue-400",
-    "bg-green-400",
     "bg-red-400",
     "bg-orange-400",
     "bg-yellow-400",
@@ -64,12 +63,12 @@ const AvatarFallback = ({ name, size }: { name: string; size: number }) => {
     <div
       className={cn("flex items-center justify-center rounded-full", bgColor)}
       style={{
-        fontSize: size * 0.5,
+        fontSize: size * 0.4,
         width: size,
         height: size,
       }}
     >
-      <span className="text-sm text-white font-semibold">{initials}</span>
+      <span className="text-white font-semibold">{initials}</span>
     </div>
   )
 }
