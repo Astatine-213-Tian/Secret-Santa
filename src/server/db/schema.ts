@@ -1,15 +1,12 @@
-import { InferSelectModel, sql } from "drizzle-orm"
+import { InferSelectModel, relations } from "drizzle-orm"
 import {
   boolean,
-  index,
   integer,
   jsonb,
   pgTable,
   primaryKey,
-  serial,
   text,
   timestamp,
-  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
 import { customAlphabet, nanoid } from "nanoid"
@@ -18,7 +15,7 @@ import type { GiftPreferences } from "@/lib/types"
 
 const createId = () => nanoid(11)
 const createCode = () =>
-  customAlphabet("123456789ABCDEFGHIJKLMNPQRSTUVWXYZ", 6)()
+  customAlphabet("123456789ABCDEFGHIJKLMNPQRSTUVWXYZ", 9)()
 
 export const user = pgTable("user", {
   id: text("id").primaryKey().$defaultFn(createId),
@@ -84,27 +81,12 @@ export const event = pgTable("event", {
   organizerId: text("organizer_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+  joinCode: varchar("join_code", { length: 9 })
+    .notNull()
+    .$defaultFn(createCode)
+    .unique(),
 })
 export type EventSchema = InferSelectModel<typeof event>
-
-export const eventJoinCode = pgTable(
-  "event_join_code",
-  {
-    id: serial("id").primaryKey(),
-    eventId: text("event_id")
-      .notNull()
-      .references(() => event.id, { onDelete: "cascade" }),
-    code: varchar("code", { length: 10 }).notNull().$defaultFn(createCode),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    isValid: boolean("is_valid").notNull().default(true),
-  },
-  (table) => [
-    index("idx_event_join_codes_valid").on(table.code, table.isValid),
-    uniqueIndex("unique_valid_codes")
-      .on(table.code)
-      .where(sql`${table.isValid} = true`),
-  ]
-)
 
 export const eventParticipant = pgTable(
   "event_participant",
@@ -116,25 +98,31 @@ export const eventParticipant = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     joinedAt: timestamp("joined_at").notNull().defaultNow(),
+    secretFriendId: text("secret_friend_id").references(() => user.id, {
+      onDelete: "cascade",
+    }),
   },
   (table) => [primaryKey({ columns: [table.eventId, table.userId] })]
 )
 
-export const santaPair = pgTable(
-  "santa_pair",
-  {
-    eventId: text("event_id")
-      .notNull()
-      .references(() => event.id, { onDelete: "cascade" }),
-    giverId: text("giver_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    receiverId: text("receiver_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-  },
-  (table) => [
-    primaryKey({ columns: [table.eventId, table.giverId, table.receiverId] }),
-    index("giver_id_idx").on(table.giverId),
-  ]
+export const eventRelations = relations(event, ({ many }) => ({
+  participants: many(eventParticipant),
+}))
+
+export const eventParticipantRelations = relations(
+  eventParticipant,
+  ({ one }) => ({
+    event: one(event, {
+      fields: [eventParticipant.eventId],
+      references: [event.id],
+    }),
+    participant: one(user, {
+      fields: [eventParticipant.userId],
+      references: [user.id],
+    }),
+    secretFriend: one(user, {
+      fields: [eventParticipant.secretFriendId],
+      references: [user.id],
+    }),
+  })
 )

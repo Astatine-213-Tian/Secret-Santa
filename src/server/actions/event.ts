@@ -1,11 +1,11 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
-import { and, eq } from "drizzle-orm"
+import { and, eq, gte } from "drizzle-orm"
 
 import { getUserId } from "@/lib/auth/auth-server"
 import { db } from "../db"
-import { event, eventJoinCode, eventParticipant } from "../db/schema"
+import { event, eventParticipant } from "../db/schema"
 
 const EVENT_ROUTE = "/dashboard/events"
 
@@ -31,8 +31,9 @@ export async function createEvent(ev: EditableEventDetails) {
 
   const eventId = newEvent[0]!.id
 
-  await db.insert(eventJoinCode).values({
-    eventId,
+  await db.insert(eventParticipant).values({
+    eventId: eventId,
+    userId: userId,
   })
 
   revalidatePath(EVENT_ROUTE)
@@ -75,23 +76,21 @@ interface JoinEventProps {
 export async function joinEvent({ joinCode }: JoinEventProps) {
   const userId = await getUserId()
 
-  const event = await db
+  const result = await db
     .select({
-      id: eventJoinCode.eventId,
+      id: event.id,
     })
-    .from(eventJoinCode)
-    .where(
-      and(eq(eventJoinCode.code, joinCode), eq(eventJoinCode.isValid, true))
-    )
+    .from(event)
+    .where(and(eq(event.joinCode, joinCode), gte(event.eventDate, new Date())))
     .limit(1)
 
-  if (event.length === 0) {
+  if (result.length === 0) {
     return { error: "Invalid join code" }
   }
 
   try {
     await db.insert(eventParticipant).values({
-      eventId: event[0]!.id,
+      eventId: result[0]!.id,
       userId: userId,
     })
   } catch (error) {

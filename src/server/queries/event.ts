@@ -1,16 +1,10 @@
 import "server-only"
 
-import { and, count, desc, eq, gte, sql } from "drizzle-orm"
+import { and, asc, count, desc, eq, gte, ne, sql } from "drizzle-orm"
 
 import { getUserId } from "@/lib/auth/auth-server"
 import { db } from "@/server/db"
-import {
-  event,
-  eventParticipant,
-  EventSchema,
-  santaPair,
-  user,
-} from "@/server/db/schema"
+import { event, eventParticipant, EventSchema, user } from "@/server/db/schema"
 
 export async function getOrganizedEvents() {
   const userId = await getUserId()
@@ -51,38 +45,97 @@ export async function getJoinedEvents() {
       event,
       and(
         eq(eventParticipant.eventId, event.id),
+        ne(event.organizerId, userId), // exclude events that the user is the organizer of
         gte(event.eventDate, new Date())
       )
     )
-    .leftJoin(
-      santaPair,
-      and(eq(event.id, santaPair.eventId), eq(santaPair.giverId, userId))
-    )
-    .leftJoin(user, eq(santaPair.receiverId, user.id))
+    .leftJoin(user, eq(eventParticipant.secretFriendId, user.id))
     .orderBy(desc(event.eventDate))
 
   return events
 }
 
-// TODO: should we have separate queries for the organizer and the participant?
-export async function getEvent(eventId: string): Promise<{
+export interface OrganizerViewEvent {
   details: EventSchema
-  isOrganizer: boolean
-}> {
-  // Get the specific event
-  const result = await db
-    .select() // select all columns
-    .from(event)
-    .where(eq(event.id, eventId))
-    .limit(1)
+  participants: {
+    participant: {
+      id: string
+      name: string
+    }
+    secretFriend: {
+      id: string
+      name: string
+    } | null
+  }[]
+}
 
-  if (result.length === 0) {
+export interface ParticipantViewEvent {
+  details: EventSchema
+}
+
+type EventViewReturn =
+  | { isOrganizer: true; eventInfo: OrganizerViewEvent }
+  | { isOrganizer: false; eventInfo: ParticipantViewEvent }
+
+export async function getEvent(eventId: string): Promise<EventViewReturn> {
+  const result = await db.query.event.findFirst({
+    where: and(eq(event.id, eventId), gte(event.eventDate, new Date())),
+    with: {
+      participants: {
+        columns: {
+          userId: true,
+          secretFriendId: true,
+        },
+        with: {
+          participant: {
+            columns: {
+              name: true,
+            },
+          },
+          secretFriend: {
+            columns: {
+              name: true,
+            },
+          },
+        },
+        orderBy: asc(eventParticipant.joinedAt),
+      },
+    },
+  })
+
+  if (!result) {
     throw new Error("Event not found")
   }
 
-  const details = result[0]!
+  const isOrganizer = result.organizerId === (await getUserId())
 
-  const isOrganizer = details.organizerId === (await getUserId())
+  const { participants, ...details } = result
 
-  return { details, isOrganizer }
+  if (isOrganizer) {
+    return {
+      isOrganizer: true,
+      eventInfo: {
+        details,
+        participants: participants.map((p) => ({
+          participant: {
+            id: p.userId,
+            name: p.participant.name,
+          },
+          secretFriend: p.secretFriendId
+            ? {
+                id: p.secretFriendId,
+                name: p.secretFriend!.name,
+              }
+            : null,
+        })),
+      },
+    }
+  } else {
+    return {
+      isOrganizer: false,
+      eventInfo: {
+        details,
+      },
+    }
+  }
 }

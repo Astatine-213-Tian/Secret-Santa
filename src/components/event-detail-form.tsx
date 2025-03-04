@@ -57,7 +57,7 @@ export const EventForm = (params: {
       name: "",
       location: "",
       description: "",
-      budget: 0,
+      budget: 20,
       eventDate: undefined,
       drawDate: undefined,
     },
@@ -70,7 +70,7 @@ export const EventForm = (params: {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(params.handleSubmit)}
-        className="space-y-4"
+        className="flex flex-col gap-4"
       >
         <FormField
           control={form.control}
@@ -79,7 +79,7 @@ export const EventForm = (params: {
             <FormItem>
               <FormLabel>Event Name</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="Office Christmas Party" />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -121,7 +121,7 @@ export const EventForm = (params: {
             <FormItem>
               <FormLabel>Location</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input {...field} placeholder="123 Main St, Anytown, USA" />
               </FormControl>
             </FormItem>
           )}
@@ -134,7 +134,10 @@ export const EventForm = (params: {
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea
+                  {...field}
+                  placeholder="Annual office Christmas party with gift exchange"
+                />
               </FormControl>
             </FormItem>
           )}
@@ -171,9 +174,11 @@ export const EventForm = (params: {
           )}
         />
 
-        <Button type="submit" disabled={submitDisabled}>
-          {params.submitButtonText}
-        </Button>
+        <div className="flex justify-end mt-2">
+          <Button type="submit" disabled={submitDisabled}>
+            {params.submitButtonText}
+          </Button>
+        </div>
       </form>
     </Form>
   )

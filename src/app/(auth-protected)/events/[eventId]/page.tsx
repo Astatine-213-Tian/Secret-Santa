@@ -1,14 +1,20 @@
 import { redirect } from "next/navigation"
+import { ClipboardCopy, Trash } from "lucide-react"
 
 import {
   deleteEvent,
   EditableEventDetails,
   updateEvent,
 } from "@/server/actions/event"
-import { EventSchema } from "@/server/db/schema"
-import { getEvent } from "@/server/queries/event"
+import { getEvent, OrganizerViewEvent } from "@/server/queries/event"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { EventForm } from "@/components/event-detail-form"
 
 /**
@@ -22,14 +28,14 @@ export default async function EventDetailsPage({
 }) {
   // Fetch the details for the specific event
   const { eventId } = await params
-  const { details, isOrganizer } = await getEvent(eventId)
+  const { eventInfo, isOrganizer } = await getEvent(eventId)
 
   // UI depends on whether the user is the organizer of the event. If they are,
   // they can manage the event. Otherwise, they can only view the details.
   const ui_parts = isOrganizer
     ? {
         heading: "Manage Event",
-        content: <ManageEventPage {...details} />,
+        content: <ManageEventPage {...eventInfo} />,
       }
     : {
         heading: "Event Details",
@@ -43,17 +49,17 @@ export default async function EventDetailsPage({
       }
 
   return (
-    <main className="max-w-3xl mx-auto p-6">
+    <main className="max-w-3xl mx-auto py-10 px-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">{ui_parts.heading}</h1>
+        <h1 className="text-3xl font-bold">{ui_parts.heading}</h1>
       </div>
       {ui_parts.content}
     </main>
   )
 }
 
-// TODO: only submit form if data was changed
-async function ManageEventPage(details: EventSchema) {
+async function ManageEventPage(event: OrganizerViewEvent) {
+  const { details, participants } = event
   // Handle edit event form submission
   const handleFormSubmit = async (data: EditableEventDetails) => {
     "use server" // can't pass callbacks to client components
@@ -69,14 +75,12 @@ async function ManageEventPage(details: EventSchema) {
   }
 
   return (
-    <>
-      <div className="flex space-x-4 mb-6">
-        <Button className="bg-red-500" onClick={handleDelete}>
-          Delete Event
-        </Button>
-      </div>
+    <div className="space-y-8">
       <Card>
-        <CardContent className="p-6 space-y-4">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Event Details</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
           {/* The form data only includes the fields that should be edited*/}
           <EventForm
             initialValues={{
@@ -92,6 +96,41 @@ async function ManageEventPage(details: EventSchema) {
           />
         </CardContent>
       </Card>
-    </>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Join Code</CardTitle>
+          <CardDescription>
+            Share this code with participants to join your event
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center">
+            <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-md font-mono text-lg">
+              {details.joinCode}
+            </div>
+            <Button variant="ghost" size="sm" className="ml-2">
+              <ClipboardCopy className="h-4 w-4" />
+              Copy
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Participants</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul>
+            {participants.map((p) => (
+              <li key={p.participant.id}>{p.participant.name}</li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+      <Button variant="destructive" onClick={handleDelete}>
+        <Trash className="w-4 h-4" />
+        Delete Event
+      </Button>
+    </div>
   )
 }

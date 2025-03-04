@@ -44,12 +44,12 @@ export const JoinEventButton = () => {
         <DialogHeader>
           <DialogTitle>Join Event</DialogTitle>
           <DialogDescription>
-            Ask your event organizer for the 6-digit join code to join the
+            Ask your event organizer for the 9-digit join code to join the
             event.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleJoinEvent} className="space-y-4">
-          <Input placeholder="xxxxxx" name="join-code" maxLength={6} />
+          <Input placeholder="xxxxxx" name="join-code" maxLength={9} />
           <Button type="submit" className="w-full">
             Join Event
           </Button>
