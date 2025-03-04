@@ -69,7 +69,10 @@ export const EventForm = (params: {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(params.handleSubmit)}
+        onSubmit={form.handleSubmit((data) => {
+          params.handleSubmit(data)
+          form.reset(data)
+        })}
         className="flex flex-col gap-4"
       >
         <FormField

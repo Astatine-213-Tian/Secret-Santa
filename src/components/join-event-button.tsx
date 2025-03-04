@@ -49,7 +49,7 @@ export const JoinEventButton = () => {
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleJoinEvent} className="space-y-4">
-          <Input placeholder="xxxxxx" name="join-code" maxLength={9} />
+          <Input placeholder="xxxxxxxxx" name="join-code" maxLength={9} />
           <Button type="submit" className="w-full">
             Join Event
           </Button>
