@@ -24,7 +24,7 @@ const cardData = [
   {
     title: "Join Event",
     description: "Enter an event code",
-    href: "/events/join",
+    href: "/event/join",
   },
   {
     title: "Calendar",
