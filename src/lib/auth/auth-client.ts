@@ -54,7 +54,7 @@ async function signUpWithEmail({
 
 async function signOut() {
   await authClient.signOut()
-  redirect("/")
+  redirect("/login")
 }
 
 export const { useSession, getSession } = authClient

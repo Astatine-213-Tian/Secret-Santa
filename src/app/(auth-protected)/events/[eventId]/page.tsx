@@ -65,7 +65,6 @@ async function ManageEventPage(event: OrganizerViewEvent) {
   const handleFormSubmit = async (data: EditableEventDetails) => {
     "use server" // can't pass callbacks to client components
     updateEvent(details.id, data) // Update the event details
-    redirect("/") // Redirect to the home page
   }
 
   // Handle delete button click
