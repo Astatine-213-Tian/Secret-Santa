@@ -1,9 +1,8 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { FileText, Gift, User, UserCircle } from "lucide-react"
+import { FileText, Gift, User } from "lucide-react"
 import { useForm, useFormContext } from "react-hook-form"
 import * as z from "zod"
 

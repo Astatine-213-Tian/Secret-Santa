@@ -5,7 +5,7 @@ const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 })
 
-const CALLBACK_URL = "/"
+const CALLBACK_URL = "/dashboard/events"
 
 async function signInWithGoogle() {
   await authClient.signIn.social({
@@ -54,7 +54,7 @@ async function signUpWithEmail({
 
 async function signOut() {
   await authClient.signOut()
-  redirect("/login")
+  redirect("/")
 }
 
 export const { useSession, getSession } = authClient
