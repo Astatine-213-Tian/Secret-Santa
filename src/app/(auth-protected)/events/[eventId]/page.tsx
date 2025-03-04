@@ -79,7 +79,7 @@ async function ManageEventPage(details: EventSchema) {
         <CardContent className="p-6 space-y-4">
           {/* The form data only includes the fields that should be edited*/}
           <EventForm
-            startValue={{
+            initialValues={{
               name: details.name,
               location: details.location,
               description: details.description ?? "",

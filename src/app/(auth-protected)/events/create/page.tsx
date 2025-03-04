@@ -12,7 +12,7 @@ export default function CreateEventPage() {
   const handleSubmit = async (data: z.infer<typeof formSchema>) => {
     // Create the event and navigate to the event management page
     const eventId = await createEvent(data)
-    router.push(`/event/${eventId}`)
+    router.push(`/events/${eventId}`)
   }
 
   return (
