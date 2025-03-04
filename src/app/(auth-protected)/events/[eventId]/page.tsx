@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation"
-import { ClipboardCopy, Trash } from "lucide-react"
+import { Trash } from "lucide-react"
 
 import {
   deleteEvent,
@@ -15,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { CopyButton } from "@/components/copy-button"
 import { EventForm } from "@/components/event-detail-form"
 
 /**
@@ -108,10 +109,7 @@ async function ManageEventPage(event: OrganizerViewEvent) {
             <div className="bg-gray-100 dark:bg-gray-800 px-4 py-2 rounded-md font-mono text-lg">
               {details.joinCode}
             </div>
-            <Button variant="ghost" size="sm" className="ml-2">
-              <ClipboardCopy className="h-4 w-4" />
-              Copy
-            </Button>
+            <CopyButton text={details.joinCode} className="ml-2" />
           </div>
         </CardContent>
       </Card>
