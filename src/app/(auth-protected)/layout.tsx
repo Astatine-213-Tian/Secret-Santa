@@ -18,9 +18,9 @@ export default async function Layout({
   }
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <NavBar user={session?.user} />
       {children}
-    </>
+    </div>
   )
 }

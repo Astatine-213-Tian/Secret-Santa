@@ -1,8 +1,11 @@
 import { headers } from "next/headers"
 import { betterAuth } from "better-auth"
+import { emailHarmony } from "better-auth-harmony"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 
 import { db } from "@/server/db"
+import { renderVerificationEmail } from "@/components/emails/email-verification"
+import { sendEmail } from "../email"
 import { hashPassword, verifyPassword } from "../password"
 
 export const auth = betterAuth({
@@ -18,6 +21,24 @@ export const auth = betterAuth({
     },
     minPasswordLength: 8,
     maxPasswordLength: 16,
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
+    expiresIn: 1000 * 60 * 60 * 24, // 1 day
+    sendVerificationEmail: async ({ user, url }) => {
+      console.log("Verification url", url)
+      await sendEmail({
+        to: user.email,
+        subject: "Verify your email address",
+        text: `Click the link to verify your email: ${url}`,
+        html: await renderVerificationEmail({
+          username: user.name,
+          verificationLink: url,
+        }),
+      })
+    },
   },
   socialProviders: {
     github: {
@@ -38,6 +59,7 @@ export const auth = betterAuth({
   advanced: {
     generateId: false,
   },
+  plugins: [emailHarmony()],
 })
 
 /**

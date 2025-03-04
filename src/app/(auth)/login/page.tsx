@@ -1,7 +1,10 @@
 "use client"
 
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 import { z } from "zod"
 
 import {
@@ -9,7 +12,6 @@ import {
   signInWithGitHub,
   signInWithGoogle,
 } from "@/lib/auth/auth-client"
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -36,10 +38,7 @@ const formSchema = z.object({
   }),
 })
 
-export const LoginForm = ({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) => {
+export default function LoginPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -48,15 +47,24 @@ export const LoginForm = ({
     },
   })
 
+  const router = useRouter()
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    await signInWithEmail({
+    const { error } = await signInWithEmail({
       email: values.email,
       password: values.password,
     })
+    if (error) {
+      if (error.status === 403) {
+        router.push(`/verify-email?email=${values.email}`)
+      } else {
+        toast.error(error.message)
+      }
+    }
   }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
+    <div className="flex flex-col gap-6">
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>
@@ -131,8 +139,12 @@ export const LoginForm = ({
                       )}
                     />
                   </div>
-                  <Button type="submit" className="w-full">
-                    Login
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={form.formState.isSubmitting}
+                  >
+                    {form.formState.isSubmitting ? "Logging in..." : "Login"}
                   </Button>
                 </div>
               </form>
@@ -140,16 +152,16 @@ export const LoginForm = ({
 
             <div className="text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="#" className="underline underline-offset-4">
+              <Link href="/sign-up" className="underline underline-offset-4">
                 Sign up
-              </a>
+              </Link>
             </div>
           </div>
         </CardContent>
       </Card>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary  ">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
+        By clicking login or create account, you agree to our{" "}
+        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
       </div>
     </div>
   )

@@ -1,5 +1,3 @@
-// Defines a component – a form to fill/modify event details to edit/create an event
-
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"

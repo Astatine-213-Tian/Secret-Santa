@@ -18,9 +18,10 @@ const createCode = () =>
   customAlphabet("123456789ABCDEFGHIJKLMNPQRSTUVWXYZ", 9)()
 
 export const user = pgTable("user", {
-  id: text("id").primaryKey().$defaultFn(createId),
+  id: varchar("id", { length: 11 }).primaryKey().$defaultFn(createId),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
+  normalizedEmail: text("normalized_email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
@@ -30,23 +31,23 @@ export const user = pgTable("user", {
 })
 
 export const session = pgTable("session", {
-  id: text("id").primaryKey().$defaultFn(createId),
+  id: varchar("id", { length: 11 }).primaryKey().$defaultFn(createId),
   expiresAt: timestamp("expires_at").notNull(),
   token: text("token").notNull().unique(),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
   ipAddress: text("ip_address"),
   userAgent: text("user_agent"),
-  userId: text("user_id")
+  userId: varchar("user_id", { length: 11 })
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 })
 
 export const account = pgTable("account", {
-  id: text("id").primaryKey().$defaultFn(createId),
+  id: varchar("id", { length: 11 }).primaryKey().$defaultFn(createId),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
-  userId: text("user_id")
+  userId: varchar("user_id", { length: 11 })
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
@@ -61,7 +62,7 @@ export const account = pgTable("account", {
 })
 
 export const verification = pgTable("verification", {
-  id: text("id").primaryKey().$defaultFn(createId),
+  id: varchar("id", { length: 11 }).primaryKey().$defaultFn(createId),
   identifier: text("identifier").notNull(),
   value: text("value").notNull(),
   expiresAt: timestamp("expires_at").notNull(),
@@ -70,7 +71,7 @@ export const verification = pgTable("verification", {
 })
 
 export const event = pgTable("event", {
-  id: text("id").primaryKey().$defaultFn(createId),
+  id: varchar("id", { length: 11 }).primaryKey().$defaultFn(createId),
   name: text("name").notNull(),
   description: text("description"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -78,7 +79,7 @@ export const event = pgTable("event", {
   drawDate: timestamp("draw_date").notNull(),
   location: text("location").notNull(),
   budget: integer("budget").notNull(),
-  organizerId: text("organizer_id")
+  organizerId: varchar("organizer_id", { length: 11 })
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   joinCode: varchar("join_code", { length: 9 })
@@ -94,13 +95,16 @@ export const eventParticipant = pgTable(
     eventId: text("event_id")
       .notNull()
       .references(() => event.id, { onDelete: "cascade" }),
-    userId: text("user_id")
+    userId: varchar("user_id", { length: 11 })
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     joinedAt: timestamp("joined_at").notNull().defaultNow(),
-    secretFriendId: text("secret_friend_id").references(() => user.id, {
-      onDelete: "cascade",
-    }),
+    secretFriendId: varchar("secret_friend_id", { length: 11 }).references(
+      () => user.id,
+      {
+        onDelete: "cascade",
+      }
+    ),
   },
   (table) => [primaryKey({ columns: [table.eventId, table.userId] })]
 )
