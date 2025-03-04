@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Mail } from "lucide-react"
+import { toast } from "sonner"
 
 import { sendVerificationEmail } from "@/lib/auth/auth-client"
 import { Button } from "@/components/ui/button"
@@ -19,8 +20,6 @@ export default function VerifyEmailPage() {
   const searchParams = useSearchParams()
   const [email, setEmail] = useState<string>("")
   const [isResending, setIsResending] = useState(false)
-  const [resendSuccess, setResendSuccess] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const emailParam = searchParams.get("email")
@@ -34,16 +33,11 @@ export default function VerifyEmailPage() {
 
     try {
       setIsResending(true)
-      setError(null)
       await sendVerificationEmail({ email })
-      setResendSuccess(true)
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        setResendSuccess(false)
-      }, 5000)
+      toast.success("Verification email has been sent")
     } catch (error) {
       console.error("Failed to resend verification email:", error)
-      setError("Failed to resend verification email. Please try again.")
+      toast.error("Failed to resend verification email. Please try again.")
     } finally {
       setIsResending(false)
     }
@@ -85,16 +79,6 @@ export default function VerifyEmailPage() {
               >
                 {isResending ? "Sending..." : "Resend verification email"}
               </Button>
-
-              {resendSuccess && (
-                <p className="text-center text-sm text-green-600">
-                  Verification email has been resent!
-                </p>
-              )}
-
-              {error && (
-                <p className="text-center text-sm text-red-600">{error}</p>
-              )}
 
               <div className="text-center text-sm">
                 <Link href="/login" className="underline underline-offset-4">

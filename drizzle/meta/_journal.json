@@ -43,6 +43,13 @@
       "when": 1741068817436,
       "tag": "0005_tough_rocket_racer",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1741128162133,
+      "tag": "0006_perfect_marvex",
+      "breakpoints": true
     }
   ]
 }

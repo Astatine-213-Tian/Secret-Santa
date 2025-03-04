@@ -1,8 +1,7 @@
 import { headers } from "next/headers"
 import { betterAuth } from "better-auth"
+import { emailHarmony } from "better-auth-harmony"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
-import { APIError, createAuthMiddleware } from "better-auth/api"
-import normalizeEmail from "validator/lib/normalizeEmail"
 
 import { db } from "@/server/db"
 import { renderVerificationEmail } from "@/components/emails/email-verification"
@@ -60,26 +59,7 @@ export const auth = betterAuth({
   advanced: {
     generateId: false,
   },
-  hooks: {
-    before: createAuthMiddleware(async (ctx) => {
-      if (ctx.path === "/sign-up/email") {
-        const normalizedEmail = normalizeEmail(ctx.body.email)
-        if (!normalizedEmail) {
-          throw new APIError("BAD_REQUEST", {
-            message: "Invalid email address",
-          })
-        }
-        return {
-          context: {
-            body: {
-              ...ctx.body,
-              email: normalizedEmail,
-            },
-          },
-        }
-      }
-    }),
-  },
+  plugins: [emailHarmony()],
 })
 
 /**
