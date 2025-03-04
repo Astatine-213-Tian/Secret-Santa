@@ -9,7 +9,9 @@ export default function DashboardLayout({
     <div className="min-h-screen flex">
       <DashboardSidebar />
       <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-        <div className="container mx-auto px-4 sm:px-6 py-8">{children}</div>
+        <div className="container mx-auto px-4 sm:px-8 py-8 sm:py-10">
+          {children}
+        </div>
       </main>
     </div>
   )

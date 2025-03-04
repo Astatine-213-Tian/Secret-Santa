@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Calendar, Gift, User } from "lucide-react"
+import { Calendar, Gift, Heart, User } from "lucide-react"
 
 const SIDEBAR_LINKS = [
   {
@@ -14,6 +14,11 @@ const SIDEBAR_LINKS = [
     href: "/dashboard/calendar",
     label: "Calendar",
     icon: Calendar,
+  },
+  {
+    href: "/dashboard/secret-friends",
+    label: "Secret Friends",
+    icon: Heart,
   },
   {
     href: "/dashboard/profile",
