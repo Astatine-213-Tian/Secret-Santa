@@ -1,10 +1,5 @@
-"use client"
-
-import { useState } from "react"
-
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -12,7 +7,7 @@ import {
 
 export default function GiftsPage() {
   // TODO: dummy gifts data, connect to be later
-  const [gifts, setGifts] = useState([
+  const gifts = [
     {
       event: "Event 1",
       user: "User 1",
@@ -21,7 +16,7 @@ export default function GiftsPage() {
       event: "Event 2",
       user: "User 2",
     },
-  ])
+  ]
 
   return (
     <div className="flex flex-col">
