@@ -7,6 +7,8 @@ import { getUserId } from "@/lib/auth/auth-server"
 import { db } from "../db"
 import { event, eventJoinCode, eventParticipant } from "../db/schema"
 
+const EVENT_ROUTE = "/dashboard/events"
+
 export interface EditableEventDetails {
   name: string
   location: string
@@ -33,7 +35,7 @@ export async function createEvent(ev: EditableEventDetails) {
     eventId,
   })
 
-  revalidatePath("/")
+  revalidatePath(EVENT_ROUTE)
 
   return eventId
 }
@@ -53,7 +55,7 @@ export async function updateEvent(eventId: string, ev: EditableEventDetails) {
     })
     .where(and(eq(event.id, eventId), eq(event.organizerId, userId)))
 
-  revalidatePath("/")
+  revalidatePath(EVENT_ROUTE)
 }
 
 export async function deleteEvent(eventId: string) {
@@ -63,7 +65,7 @@ export async function deleteEvent(eventId: string) {
     .delete(event)
     .where(and(eq(event.id, eventId), eq(event.organizerId, userId)))
 
-  revalidatePath("/")
+  revalidatePath(EVENT_ROUTE)
 }
 
 interface JoinEventProps {
@@ -99,5 +101,5 @@ export async function joinEvent({ joinCode }: JoinEventProps) {
     throw error
   }
 
-  revalidatePath("/")
+  revalidatePath(EVENT_ROUTE)
 }

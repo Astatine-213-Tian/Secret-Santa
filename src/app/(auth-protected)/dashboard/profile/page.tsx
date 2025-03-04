@@ -36,7 +36,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="max-w-3xl mx-auto p-6">
+    <div className="max-w-3xl mx-auto p-6">
       <Card>
         <CardHeader>
           <CardTitle>User Profile</CardTitle>
@@ -146,6 +146,6 @@ export default function ProfilePage() {
           )}
         </CardFooter>
       </Card>
-    </main>
+    </div>
   )
 }

@@ -24,7 +24,7 @@ export const OrganizedEventCard = ({
 }: OrganizedEventCardProps) => {
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-3 pt-5">
         <CardTitle className="text-lg mb-2">{name}</CardTitle>
         <p className="text-base font-medium text-gray-600">
           {eventDate.toLocaleDateString("en-US", {
@@ -59,7 +59,7 @@ export const OrganizedEventCard = ({
           </p>
         </div>
         <Link
-          href={`/event/${eventId}`}
+          href={`/events/${eventId}`}
           className={cn(buttonVariants({ variant: "default" }), "mt-4")}
         >
           Manage
