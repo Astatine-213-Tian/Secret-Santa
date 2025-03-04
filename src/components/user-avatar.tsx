@@ -1,7 +1,6 @@
 "use client"
 
-import Image from "next/image"
-import { LogOut, UserCircle } from "lucide-react"
+import { LogOut } from "lucide-react"
 
 import { signOut } from "@/lib/auth/auth-client"
 import { cn } from "@/lib/utils"
@@ -13,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Avatar } from "./ui/avatar"
 
 interface UserAvatarProps extends React.ComponentPropsWithoutRef<"button"> {
   name: string
@@ -35,17 +35,7 @@ export const UserAvatar = ({
           className={cn("flex h-10 w-10 rounded-full p-0", className)}
           {...props}
         >
-          {image ? (
-            <Image
-              src={image}
-              alt={name}
-              className="h-full w-full rounded-full"
-              width={48}
-              height={48}
-            />
-          ) : (
-            <UserCircle className="h-full w-full rounded-full" />
-          )}
+          <Avatar src={image} alt={name} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">

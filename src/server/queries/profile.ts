@@ -37,6 +37,6 @@ export async function getProfile() {
         additionalInfo: "",
       },
     },
-    image: result.image,
+    avatarUrl: result.image,
   }
 }

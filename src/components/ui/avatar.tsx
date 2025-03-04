@@ -1,53 +1,75 @@
-"use client"
-
-import * as React from "react"
-import * as AvatarPrimitive from "@radix-ui/react-avatar"
+import Image from "next/image"
 
 import { cn } from "@/lib/utils"
 
-function Avatar({
-  className,
-  ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Root>) {
+interface AvatarProps {
+  src: string | null | undefined
+  alt: string
+  size?: number
+}
+
+export const Avatar = ({ src, alt, size = 48 }: AvatarProps) => {
   return (
-    <AvatarPrimitive.Root
-      data-slot="avatar"
-      className={cn(
-        "relative flex size-8 shrink-0 overflow-hidden rounded-full",
-        className
+    <div className="relative">
+      {src ? (
+        <Image
+          src={src}
+          alt={alt}
+          className="rounded-full aspect-square"
+          width={size}
+          height={size}
+        />
+      ) : (
+        <AvatarFallback name={alt} size={size} />
       )}
-      {...props}
-    />
+    </div>
   )
 }
 
-function AvatarImage({
-  className,
-  ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Image>) {
+const stringToColor = (str: string) => {
+  const colors = [
+    "bg-blue-400",
+    "bg-green-400",
+    "bg-red-400",
+    "bg-orange-400",
+    "bg-yellow-400",
+    "bg-purple-400",
+    "bg-pink-400",
+    "bg-gray-400",
+    "bg-teal-400",
+    "bg-lime-400",
+    "bg-indigo-400",
+    "bg-fuchsia-400",
+    "bg-cyan-400",
+  ]
+  const asciiSum = str
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  const color = colors[asciiSum % colors.length]
+  return color
+}
+
+const getInitials = (name: string) => {
+  return name
+    .split(" ")
+    .map((n) => n[0]?.toUpperCase())
+    .join("")
+    .slice(0, 2)
+}
+
+const AvatarFallback = ({ name, size }: { name: string; size: number }) => {
+  const initials = getInitials(name)
+  const bgColor = stringToColor(name)
   return (
-    <AvatarPrimitive.Image
-      data-slot="avatar-image"
-      className={cn("aspect-square size-full", className)}
-      {...props}
-    />
+    <div
+      className={cn("flex items-center justify-center rounded-full", bgColor)}
+      style={{
+        fontSize: size * 0.5,
+        width: size,
+        height: size,
+      }}
+    >
+      <span className="text-sm text-white font-semibold">{initials}</span>
+    </div>
   )
 }
-
-function AvatarFallback({
-  className,
-  ...props
-}: React.ComponentProps<typeof AvatarPrimitive.Fallback>) {
-  return (
-    <AvatarPrimitive.Fallback
-      data-slot="avatar-fallback"
-      className={cn(
-        "bg-muted flex size-full items-center justify-center rounded-full",
-        className
-      )}
-      {...props}
-    />
-  )
-}
-
-export { Avatar, AvatarImage, AvatarFallback }
