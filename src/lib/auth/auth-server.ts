@@ -40,6 +40,11 @@ export const auth = betterAuth({
   },
 })
 
+/**
+ * Get the user id from the session
+ * @returns The user id
+ * @throws Unauthorized if the user is not authenticated
+ */
 export async function getUserId() {
   const session = await auth.api.getSession({
     headers: await headers(),

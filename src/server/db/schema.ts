@@ -14,7 +14,7 @@ import {
 } from "drizzle-orm/pg-core"
 import { customAlphabet, nanoid } from "nanoid"
 
-import type { UserProfile } from "@/lib/types"
+import type { GiftPreferences } from "@/lib/types"
 
 const createId = () => nanoid(11)
 const createCode = () =>
@@ -28,7 +28,8 @@ export const user = pgTable("user", {
   image: text("image"),
   createdAt: timestamp("created_at").notNull(),
   updatedAt: timestamp("updated_at").notNull(),
-  profile: jsonb().$type<UserProfile>(),
+  bio: text("bio"),
+  giftPreferences: jsonb().$type<GiftPreferences>(),
 })
 
 export const session = pgTable("session", {

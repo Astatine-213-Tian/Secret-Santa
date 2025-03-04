@@ -39,21 +39,21 @@ export const formSchema = z
 
 /**
  * A form to edit or create a new event
- * @param startValue (optional) The initial values for the form
+ * @param initialValues (optional) The initial values for the form
  * @param handleSubmit The function to call when the form is submitted
  * @returns The form component
  * @useCases
- * 1. Creating a new event (startValue is undefined)
- * 2. Editing an existing event (startValue is the existing event details)
+ * 1. Creating a new event (initialValues is undefined)
+ * 2. Editing an existing event (initialValues is the existing event details)
  */
 export const EventForm = (params: {
-  startValue?: EditableEventDetails
+  initialValues?: EditableEventDetails
   submitButtonText: string
   handleSubmit: (data: EditableEventDetails) => void
 }) => {
   const form = useForm<EditableEventDetails>({
     resolver: zodResolver(formSchema),
-    defaultValues: params.startValue ?? {
+    defaultValues: params.initialValues ?? {
       name: "",
       location: "",
       description: "",
