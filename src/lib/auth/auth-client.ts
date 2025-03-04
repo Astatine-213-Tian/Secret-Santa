@@ -28,7 +28,7 @@ async function signInWithEmail({
   email: string
   password: string
 }) {
-  await authClient.signIn.email({
+  return await authClient.signIn.email({
     email,
     password,
     callbackURL: CALLBACK_URL,
@@ -57,7 +57,7 @@ async function signOut() {
   redirect("/login")
 }
 
-export const { useSession, getSession } = authClient
+export const { useSession, getSession, sendVerificationEmail } = authClient
 export {
   signInWithGoogle,
   signInWithGitHub,
