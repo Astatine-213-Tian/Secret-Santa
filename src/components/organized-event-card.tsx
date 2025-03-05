@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { format } from "date-fns"
 import { CalendarClock, Hash, MapPin } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -27,11 +28,7 @@ export const OrganizedEventCard = ({
       <CardHeader className="pb-3 pt-5">
         <CardTitle className="text-lg mb-2">{name}</CardTitle>
         <p className="text-base font-medium text-gray-600">
-          {eventDate.toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
+          {format(eventDate, "LLL dd, y")}
         </p>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col justify-between pt-0">
@@ -49,13 +46,7 @@ export const OrganizedEventCard = ({
           <p className="text-sm text-gray-600 flex items-center">
             <CalendarClock className="w-4 h-4 mr-1" />
             Draw Date:&nbsp;
-            <span className="font-medium">
-              {drawDate.toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-                year: "numeric",
-              })}
-            </span>
+            <span className="font-medium">{format(drawDate, "LLL dd, y")}</span>
           </p>
         </div>
         <Link

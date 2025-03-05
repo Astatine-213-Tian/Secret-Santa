@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { format } from "date-fns"
 import { CircleDollarSign, Gift, MapPin } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -27,11 +28,7 @@ export const JoinedEventCard = ({
       <CardHeader className="pb-3 pt-5">
         <CardTitle className="text-lg mb-2">{name}</CardTitle>
         <p className="text-base font-medium text-gray-600">
-          {eventDate.toLocaleDateString("en-US", {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          })}
+          {format(eventDate, "LLL dd, y")}
         </p>
       </CardHeader>
       <CardContent className="flex-grow flex flex-col justify-between pt-0">
