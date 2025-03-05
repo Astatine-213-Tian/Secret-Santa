@@ -137,15 +137,15 @@ function GiftPreferencesCard() {
         <Tabs defaultValue="likes">
           <TabsList className="mb-4">
             <TabsTrigger value="likes">
-              <Gift className="h-4 w-4 mr-2" />
+              <Gift className="h-4 w-4" />
               Likes & Dislikes
             </TabsTrigger>
             <TabsTrigger value="sizes">
-              <User className="h-4 w-4 mr-2" />
+              <User className="h-4 w-4" />
               Sizes & Allergies
             </TabsTrigger>
             <TabsTrigger value="additional">
-              <FileText className="h-4 w-4 mr-2" />
+              <FileText className="h-4 w-4" />
               Additional Info
             </TabsTrigger>
           </TabsList>
