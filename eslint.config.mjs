@@ -20,6 +20,4 @@ const eslintConfig = [
   },
 ]
 
-module.exports = [pluginSecurity.configs.recommended];
-
 export default eslintConfig
