@@ -24,6 +24,7 @@ export const auth = betterAuth({
     requireEmailVerification: true,
     sendResetPassword: async ({ user, url }) => {
       console.log("Reset password url", url)
+      // TODO: Send reset email
     },
   },
   emailVerification: {
