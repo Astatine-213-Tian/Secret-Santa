@@ -57,11 +57,20 @@ async function signOut() {
   redirect("/login")
 }
 
-export const { useSession, getSession, sendVerificationEmail } = authClient
+async function forgetPassword({ email }: { email: string }) {
+  return await authClient.forgetPassword({
+    email,
+    redirectTo: "/reset-password",
+  })
+}
+
+export const { useSession, getSession, sendVerificationEmail, resetPassword } =
+  authClient
 export {
   signInWithGoogle,
   signInWithGitHub,
   signInWithEmail,
   signUpWithEmail,
   signOut,
+  forgetPassword,
 }
