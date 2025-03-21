@@ -17,6 +17,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
@@ -124,12 +125,12 @@ export default function LoginPage() {
                         <FormItem>
                           <div className="flex items-center">
                             <FormLabel htmlFor="password">Password</FormLabel>
-                            <a
-                              href="#"
+                            <Link
+                              href="/forget-password"
                               className="ml-auto text-sm underline-offset-4 hover:underline"
                             >
                               Forgot your password?
-                            </a>
+                            </Link>
                           </div>
                           <FormControl>
                             <Input {...field} type="password" />
@@ -149,15 +150,14 @@ export default function LoginPage() {
                 </div>
               </form>
             </Form>
-
-            <div className="text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <Link href="/sign-up" className="underline underline-offset-4">
-                Sign up
-              </Link>
-            </div>
           </div>
         </CardContent>
+        <CardFooter className="justify-center text-sm">
+          Don&apos;t have an account?&nbsp;
+          <Link href="/sign-up" className="underline underline-offset-4">
+            Sign up
+          </Link>
+        </CardFooter>
       </Card>
       <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
         By clicking login or create account, you agree to our{" "}
