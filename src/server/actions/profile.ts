@@ -15,7 +15,7 @@ export async function updateProfile(
     userProfileSchema.parse(profile)
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new Error(error.message)
+      return { error: error.message }
     }
     throw error
   }
