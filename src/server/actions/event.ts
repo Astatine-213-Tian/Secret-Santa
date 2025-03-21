@@ -1,24 +1,23 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
 import { and, eq, gte } from "drizzle-orm"
+import { z } from "zod"
 
 import { getUserId } from "@/lib/auth/auth-server"
+import { eventDetailsSchema } from "@/schemas/event"
 import { db } from "../db"
 import { event, eventParticipant } from "../db/schema"
 
-const EVENT_ROUTE = "/dashboard/events"
+export async function createEvent(ev: z.infer<typeof eventDetailsSchema>) {
+  try {
+    eventDetailsSchema.parse(ev)
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { error: error.message }
+    }
+    throw error
+  }
 
-export interface EditableEventDetails {
-  name: string
-  location: string
-  description: string
-  budget: number
-  eventDate: Date
-  drawDate: Date
-}
-
-export async function createEvent(ev: EditableEventDetails) {
   const userId = await getUserId()
 
   const newEvent = await db
@@ -36,12 +35,22 @@ export async function createEvent(ev: EditableEventDetails) {
     userId: userId,
   })
 
-  revalidatePath(EVENT_ROUTE)
-
   return eventId
 }
 
-export async function updateEvent(eventId: string, ev: EditableEventDetails) {
+export async function updateEvent(
+  eventId: string,
+  ev: z.infer<typeof eventDetailsSchema>
+) {
+  try {
+    eventDetailsSchema.parse(ev)
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { error: error.message }
+    }
+    throw error
+  }
+
   const userId = await getUserId()
 
   await db
@@ -55,8 +64,6 @@ export async function updateEvent(eventId: string, ev: EditableEventDetails) {
       location: ev.location,
     })
     .where(and(eq(event.id, eventId), eq(event.organizerId, userId)))
-
-  revalidatePath(EVENT_ROUTE)
 }
 
 export async function deleteEvent(eventId: string) {
@@ -65,8 +72,6 @@ export async function deleteEvent(eventId: string) {
   await db
     .delete(event)
     .where(and(eq(event.id, eventId), eq(event.organizerId, userId)))
-
-  revalidatePath(EVENT_ROUTE)
 }
 
 interface JoinEventProps {
@@ -99,6 +104,4 @@ export async function joinEvent({ joinCode }: JoinEventProps) {
     }
     throw error
   }
-
-  revalidatePath(EVENT_ROUTE)
 }

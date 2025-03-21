@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { EditableEventDetails } from "@/server/actions/event"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -18,22 +17,7 @@ import {
 import { FormDatePicker } from "@/components/ui/form-date-picker"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-
-export const formSchema = z
-  .object({
-    name: z.string().min(1, "Name is required"),
-    location: z.string().min(1, "Location is required"),
-    description: z.string().min(1, "Description is required"),
-    budget: z
-      .number({ required_error: "Budget is required" })
-      .min(1, "Budget should be greater than 0"),
-    eventDate: z.date({ required_error: "Event date is required" }),
-    drawDate: z.date({ required_error: "Draw date is required" }),
-  })
-  .refine((data) => data.drawDate <= data.eventDate, {
-    message: "Draw date should be before event date",
-    path: ["drawDate"],
-  })
+import { eventDetailsSchema } from "@/schemas/event"
 
 /**
  * A form to edit or create a new event
@@ -45,12 +29,12 @@ export const formSchema = z
  * 2. Editing an existing event (initialValues is the existing event details)
  */
 export const EventForm = (params: {
-  initialValues?: EditableEventDetails
+  initialValues?: z.infer<typeof eventDetailsSchema>
   submitButtonText: string
-  handleSubmit: (data: EditableEventDetails) => void
+  handleSubmit: (data: z.infer<typeof eventDetailsSchema>) => void
 }) => {
-  const form = useForm<EditableEventDetails>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof eventDetailsSchema>>({
+    resolver: zodResolver(eventDetailsSchema),
     defaultValues: params.initialValues ?? {
       name: "",
       location: "",

@@ -4,12 +4,13 @@ import { useRouter } from "next/navigation"
 import { z } from "zod"
 
 import { createEvent } from "@/server/actions/event"
-import { EventForm, formSchema } from "@/components/event-detail-form"
+import { EventForm } from "@/components/event-detail-form"
+import { eventDetailsSchema } from "@/schemas/event"
 
 export default function CreateEventPage() {
   const router = useRouter()
 
-  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+  const handleSubmit = async (data: z.infer<typeof eventDetailsSchema>) => {
     // Create the event and navigate to the event management page
     const eventId = await createEvent(data)
     router.push(`/events/${eventId}`)

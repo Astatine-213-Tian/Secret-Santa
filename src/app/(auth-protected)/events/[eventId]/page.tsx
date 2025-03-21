@@ -1,11 +1,8 @@
 import { redirect } from "next/navigation"
 import { Trash } from "lucide-react"
+import { z } from "zod"
 
-import {
-  deleteEvent,
-  EditableEventDetails,
-  updateEvent,
-} from "@/server/actions/event"
+import { deleteEvent, updateEvent } from "@/server/actions/event"
 import { getEvent, OrganizerViewEvent } from "@/server/queries/event"
 import { Button } from "@/components/ui/button"
 import {
@@ -17,6 +14,7 @@ import {
 } from "@/components/ui/card"
 import { CopyButton } from "@/components/copy-button"
 import { EventForm } from "@/components/event-detail-form"
+import { eventDetailsSchema } from "@/schemas/event"
 
 /**
  * @param params - { eventId } that we want to view the details of
@@ -62,7 +60,7 @@ export default async function EventDetailsPage({
 async function ManageEventPage(event: OrganizerViewEvent) {
   const { details, participants } = event
   // Handle edit event form submission
-  const handleFormSubmit = async (data: EditableEventDetails) => {
+  const handleFormSubmit = async (data: z.infer<typeof eventDetailsSchema>) => {
     "use server" // can't pass callbacks to client components
     updateEvent(details.id, data) // Update the event details
   }
