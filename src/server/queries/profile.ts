@@ -25,17 +25,15 @@ export async function getProfile() {
   }
 
   return {
-    profile: {
-      email: result.email,
-      name: result.name,
-      bio: result.bio ?? "",
-      giftPreferences: result.giftPreferences ?? {
-        likes: "",
-        dislikes: "",
-        sizes: "",
-        allergies: "",
-        additionalInfo: "",
-      },
+    email: result.email,
+    name: result.name,
+    bio: result.bio ?? "",
+    giftPreferences: result.giftPreferences ?? {
+      likes: "",
+      dislikes: "",
+      sizes: "",
+      allergies: "",
+      additionalInfo: "",
     },
     avatarUrl: result.image,
   }

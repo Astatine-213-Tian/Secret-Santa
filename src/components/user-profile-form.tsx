@@ -18,7 +18,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,32 +26,19 @@ import {
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
+import { userProfileSchema } from "@/schemas/user"
 import { Avatar } from "./ui/avatar"
 
-const longText = z
-  .string()
-  .max(500, { message: "Must be less than 500 characters" })
-const shortText = z
-  .string()
-  .max(200, { message: "Must be less than 200 characters" })
-
-const profileSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  bio: longText,
-  giftPreferences: z.object({
-    likes: longText,
-    dislikes: longText,
-    sizes: shortText,
-    allergies: shortText,
-    additionalInfo: longText,
-  }),
-})
-
 // Infer the type from the schema
-type ProfileFormValues = z.infer<typeof profileSchema>
+type ProfileFormValues = z.infer<typeof userProfileSchema>
 
-function PersonalInfoCard({ avatarUrl }: { avatarUrl: string | null }) {
+function PersonalInfoCard({
+  avatarUrl,
+  email,
+}: {
+  avatarUrl: string | null
+  email: string
+}) {
   const form = useFormContext<ProfileFormValues>()
 
   return (
@@ -83,20 +69,10 @@ function PersonalInfoCard({ avatarUrl }: { avatarUrl: string | null }) {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled />
-                    </FormControl>
-                    <FormDescription>Email cannot be changed</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <Input value={email} disabled />
+              </FormItem>
             </div>
             <FormField
               control={form.control}
@@ -246,18 +222,21 @@ function GiftPreferencesCard() {
   )
 }
 
-export function UserProfileForm({
-  initialValues,
-  avatarUrl,
-}: {
-  initialValues: ProfileFormValues
+interface UserProfileFormProps extends ProfileFormValues {
   avatarUrl: string | null
-}) {
+  email: string
+}
+
+export function UserProfileForm({
+  avatarUrl,
+  email,
+  ...initialValues
+}: UserProfileFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // Initialize the form with React Hook Form and Zod validation
   const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(userProfileSchema),
     defaultValues: initialValues,
   })
 
@@ -278,7 +257,7 @@ export function UserProfileForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <PersonalInfoCard avatarUrl={avatarUrl} />
+        <PersonalInfoCard avatarUrl={avatarUrl} email={email} />
         <GiftPreferencesCard />
         <div className="flex justify-end">
           <Button
