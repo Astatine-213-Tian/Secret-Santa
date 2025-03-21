@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { CheckCircle, Lock } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -57,7 +57,6 @@ const formSchema = z
   })
 
 export default function ResetPasswordPage() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const [token, setToken] = useState<string | null>(null)
   const [isResetComplete, setIsResetComplete] = useState(false)
@@ -144,13 +143,12 @@ export default function ResetPasswordPage() {
           {error ? (
             <div className="text-center mb-6">
               <p className="text-sm text-red-600">{error}</p>
-              <Button
-                variant="outline"
-                onClick={() => router.push("/forgot-password")}
-                className="mt-4"
+              <Link
+                href="/forgot-password"
+                className={cn(buttonVariants({ variant: "outline" }), "mt-4")}
               >
                 Request new reset link
-              </Button>
+              </Link>
             </div>
           ) : (
             <Form {...form}>
