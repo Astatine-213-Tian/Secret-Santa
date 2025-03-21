@@ -7,7 +7,7 @@ import { GiftPreferences } from "@/lib/types"
 import { db } from "../db"
 import { user } from "../db/schema"
 
-interface UpdateProfileProps {
+export interface UpdateProfileProps {
   name: string
   bio: string
   giftPreferences: GiftPreferences
