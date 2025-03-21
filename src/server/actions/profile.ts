@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm"
 import { z } from "zod"
 
 import { getUserId } from "@/lib/auth/auth-server"
-import { userProfileSchema } from "@/schemas/user"
+import { userProfileSchema } from "@/schemas/profile"
 import { db } from "../db"
 import { user } from "../db/schema"
 

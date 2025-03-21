@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
-import { userProfileSchema } from "@/schemas/user"
+import { userProfileSchema } from "@/schemas/profile"
 import { Avatar } from "./ui/avatar"
 
 // Infer the type from the schema
