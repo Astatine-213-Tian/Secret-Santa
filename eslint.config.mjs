@@ -1,7 +1,7 @@
 import { dirname } from "path"
 import { fileURLToPath } from "url"
 import { FlatCompat } from "@eslint/eslintrc"
-import * as pluginSecurity from "eslint-plugin-security"
+import security from "eslint-plugin-security"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -12,6 +12,7 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
+  security.configs.recommended,
   {
     rules: {
       "react/no-unescaped-entities": "off",
@@ -20,5 +21,4 @@ const eslintConfig = [
     },
   },
 ]
-
 export default eslintConfig
