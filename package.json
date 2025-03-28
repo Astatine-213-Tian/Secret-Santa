@@ -59,6 +59,7 @@
     "@svgr/webpack": "^8.1.0",
     "@types/bun": "latest",
     "@types/node": "^22.10.6",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
     "dotenv": "^16.4.5",
