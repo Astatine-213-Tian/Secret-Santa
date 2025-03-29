@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { format } from "date-fns"
-import { CalendarClock, Hash, MapPin } from "lucide-react"
+import { CalendarClock, MapPin } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "./ui/button"
@@ -11,8 +11,7 @@ interface OrganizedEventCardProps {
   eventId: string
   eventDate: Date
   location: string
-  participantsNum: number
-  drawDate: Date
+  drawCompleted: boolean
 }
 
 export const OrganizedEventCard = ({
@@ -20,8 +19,7 @@ export const OrganizedEventCard = ({
   eventId,
   eventDate,
   location,
-  participantsNum,
-  drawDate,
+  drawCompleted,
 }: OrganizedEventCardProps) => {
   return (
     <Card>
@@ -34,23 +32,20 @@ export const OrganizedEventCard = ({
       <CardContent className="flex-grow flex flex-col justify-between pt-0">
         <div className="space-y-2">
           <p className="text-sm text-gray-600 flex items-center">
-            <Hash className="w-4 h-4 mr-1" />
-            <span className="font-medium">{participantsNum}</span>
-            &nbsp;participants
-          </p>
-          <p className="text-sm text-gray-600 flex items-center">
             <MapPin className="w-4 h-4 mr-1" />
             Location:&nbsp;
             <span className="font-medium">{location}</span>
           </p>
           <p className="text-sm text-gray-600 flex items-center">
             <CalendarClock className="w-4 h-4 mr-1" />
-            Draw Date:&nbsp;
-            <span className="font-medium">{format(drawDate, "LLL dd, y")}</span>
+            Draw Status:&nbsp;
+            <span className="font-medium">
+              {drawCompleted ? "Completed" : "Pending"}
+            </span>
           </p>
         </div>
         <Link
-          href={`/events/${eventId}`}
+          href={`/dashboard/events/${eventId}`}
           className={cn(buttonVariants({ variant: "default" }), "mt-4")}
         >
           Manage

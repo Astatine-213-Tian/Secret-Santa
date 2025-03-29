@@ -30,7 +30,7 @@ const SIDEBAR_LINKS = [
 export function DashboardSidebar() {
   const pathname = usePathname()
 
-  const isActive = (path: string) => pathname === path
+  const isActive = (path: string) => pathname.startsWith(path)
 
   return (
     <aside className="bg-white w-64 hidden sm:block shadow-xl">
@@ -39,7 +39,7 @@ export function DashboardSidebar() {
           <Link
             key={link.href}
             href={link.href}
-            className={`flex items-center px-4 py-2 rounded-md ${
+            className={`flex items-center font-medium px-4 py-2 rounded-md ${
               isActive(link.href)
                 ? "bg-red-100 text-red-600"
                 : "text-gray-700 hover:bg-red-100"

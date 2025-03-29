@@ -18,9 +18,9 @@ export default async function Layout({
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <NavBar user={session?.user} />
-      {children}
+    <div className="flex flex-col h-screen overflow-hidden">
+      <NavBar user={session?.user} className="h-16" />
+      <div className="flex-1 overflow-y-auto flex flex-col">{children}</div>
     </div>
   )
 }

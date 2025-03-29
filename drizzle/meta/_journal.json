@@ -50,6 +50,20 @@
       "when": 1741128162133,
       "tag": "0006_perfect_marvex",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1743211018930,
+      "tag": "0007_cynical_firelord",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1743219982389,
+      "tag": "0008_motionless_micromax",
+      "breakpoints": true
     }
   ]
 }
