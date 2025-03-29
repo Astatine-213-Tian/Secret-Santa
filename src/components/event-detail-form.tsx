@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -41,7 +40,6 @@ export const EventForm = (params: {
       description: "",
       budget: 20,
       eventDate: undefined,
-      drawDate: undefined,
     },
   })
 
@@ -78,22 +76,6 @@ export const EventForm = (params: {
             <FormItem className="flex flex-col">
               <FormLabel>Event Date</FormLabel>
               <FormDatePicker field={field} />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="drawDate"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Draw Date</FormLabel>
-              <FormDatePicker field={field} />
-              <FormDescription>
-                The date when participants will be randomly assigned their
-                secret gift recipients.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}

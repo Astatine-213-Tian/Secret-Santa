@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { getUserId } from "@/lib/auth/auth-server"
+import { getUserInfo } from "@/lib/auth/auth-server"
 import { db } from "../../db"
 import { createEvent, updateEvent } from "../event"
 
@@ -14,7 +14,7 @@ class UnauthorizedError extends Error {
 
 // Mock dependencies
 vi.mock("@/lib/auth/auth-server", () => ({
-  getUserId: vi.fn(),
+  getUserInfo: vi.fn(),
 }))
 
 vi.mock("../../db", () => ({
@@ -38,16 +38,21 @@ describe("Event Actions", () => {
     description: "A test event description",
     budget: 50,
     eventDate: new Date("2023-12-25"),
-    drawDate: new Date("2023-12-01"),
     location: "Test Location",
-    joinCode: "TEST123",
   }
 
-  const mockUserId = "user-123"
+  const mockUserInfo = {
+    id: "user-123",
+    email: "test@example.com",
+    emailVerified: true,
+    name: "Test User",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(getUserId).mockResolvedValue(mockUserId)
+    vi.mocked(getUserInfo).mockResolvedValue(mockUserInfo)
   })
 
   afterEach(() => {
@@ -59,14 +64,14 @@ describe("Event Actions", () => {
     it("should create an event successfully with valid data", async () => {
       const result = await createEvent(validEventData)
 
-      expect(getUserId).toHaveBeenCalledTimes(1)
+      expect(getUserInfo).toHaveBeenCalledTimes(1)
       expect(db.insert).toHaveBeenCalledTimes(2)
 
       // Check event insertion
       const insertValues = vi.mocked(db.insert).mock.results[0]!.value!.values
       expect(insertValues).toHaveBeenCalledWith({
         ...validEventData,
-        organizerId: mockUserId,
+        organizerId: mockUserInfo.id,
       })
 
       // Check participant insertion
@@ -74,7 +79,7 @@ describe("Event Actions", () => {
         .values
       expect(participantValues).toHaveBeenCalledWith({
         eventId: "mocked-event-id",
-        userId: mockUserId,
+        userId: mockUserInfo.id,
       })
 
       expect(result).toBe("mocked-event-id")
@@ -145,7 +150,7 @@ describe("Event Actions", () => {
       const insertValues = vi.mocked(db.insert).mock.results[0]!.value!.values
       expect(insertValues).toHaveBeenCalledWith({
         ...maliciousData,
-        organizerId: mockUserId,
+        organizerId: mockUserInfo.id,
       })
 
       // In a real application, you'd verify that the ORM properly escapes these values
@@ -154,7 +159,7 @@ describe("Event Actions", () => {
     // 5. Unauthenticated users
     it("should reject event creation by unauthenticated users", async () => {
       // Simulate authentication failure
-      vi.mocked(getUserId).mockRejectedValueOnce(
+      vi.mocked(getUserInfo).mockRejectedValueOnce(
         new UnauthorizedError("Not authenticated")
       )
 
@@ -173,7 +178,7 @@ describe("Event Actions", () => {
     it("should update an event successfully with valid data", async () => {
       await updateEvent(eventId, validEventData)
 
-      expect(getUserId).toHaveBeenCalledTimes(1)
+      expect(getUserInfo).toHaveBeenCalledTimes(1)
       expect(db.update).toHaveBeenCalledTimes(1)
 
       const setValues = vi.mocked(db.update).mock.results[0]!.value!.set
@@ -182,7 +187,6 @@ describe("Event Actions", () => {
         description: validEventData.description,
         budget: validEventData.budget,
         eventDate: validEventData.eventDate,
-        drawDate: validEventData.drawDate,
         location: validEventData.location,
       })
 
@@ -246,7 +250,7 @@ describe("Event Actions", () => {
     // 5. Unauthenticated users
     it("should reject event updates by unauthenticated users", async () => {
       // Simulate authentication failure
-      vi.mocked(getUserId).mockRejectedValueOnce(
+      vi.mocked(getUserInfo).mockRejectedValueOnce(
         new UnauthorizedError("Not authenticated")
       )
 

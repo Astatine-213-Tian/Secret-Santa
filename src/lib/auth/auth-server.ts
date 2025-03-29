@@ -13,6 +13,13 @@ export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "pg",
   }),
+  user: {
+    additionalFields: {
+      normalizedEmail: {
+        type: "string",
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     password: {
@@ -69,15 +76,15 @@ export const auth = betterAuth({
 
 /**
  * Get the user id from the session
- * @returns The user id
+ * @returns The user object
  * @throws Unauthorized if the user is not authenticated
  */
-export async function getUserId() {
+export async function getUserInfo() {
   const session = await auth.api.getSession({
     headers: await headers(),
   })
   if (!session) {
     throw new Error("Unauthorized")
   }
-  return session.user.id
+  return session.user
 }

@@ -1,4 +1,4 @@
-import { InferSelectModel, relations } from "drizzle-orm"
+import { InferSelectModel, relations, sql } from "drizzle-orm"
 import {
   boolean,
   integer,
@@ -7,15 +7,16 @@ import {
   primaryKey,
   text,
   timestamp,
+  unique,
+  uniqueIndex,
   varchar,
 } from "drizzle-orm/pg-core"
-import { customAlphabet, nanoid } from "nanoid"
+import { nanoid } from "nanoid"
 
 import type { GiftPreferences } from "@/lib/types"
 
 const createId = () => nanoid(11)
-const createCode = () =>
-  customAlphabet("123456789ABCDEFGHIJKLMNPQRSTUVWXYZ", 9)()
+const createToken = () => nanoid(20)
 
 export const user = pgTable("user", {
   id: varchar("id", { length: 11 }).primaryKey().$defaultFn(createId),
@@ -76,16 +77,12 @@ export const event = pgTable("event", {
   description: text("description"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   eventDate: timestamp("event_date").notNull(),
-  drawDate: timestamp("draw_date").notNull(),
+  drawCompleted: boolean("draw_completed").notNull().default(false),
   location: text("location").notNull(),
   budget: integer("budget").notNull(),
   organizerId: varchar("organizer_id", { length: 11 })
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
-  joinCode: varchar("join_code", { length: 9 })
-    .notNull()
-    .$defaultFn(createCode)
-    .unique(),
 })
 export type EventSchema = InferSelectModel<typeof event>
 
@@ -99,17 +96,80 @@ export const eventParticipant = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     joinedAt: timestamp("joined_at").notNull().defaultNow(),
-    secretFriendId: varchar("secret_friend_id", { length: 11 }).references(
-      () => user.id,
-      {
-        onDelete: "cascade",
-      }
-    ),
   },
   (table) => [primaryKey({ columns: [table.eventId, table.userId] })]
 )
+export const assignment = pgTable(
+  "assignment",
+  {
+    eventId: text("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    giverId: varchar("giver_id", { length: 11 })
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    receiverId: varchar("receiver_id", { length: 11 })
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+  },
+  (table) => [
+    primaryKey({ columns: [table.eventId, table.giverId] }),
+    unique("assignment_receiver_unique").on(table.eventId, table.receiverId),
+  ]
+)
+
+// exclusion rules: user1 can't be assigned to user2
+export const assignmentExclusion = pgTable(
+  "assignment_exclusion",
+  {
+    eventId: text("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    giverId: varchar("giver_id", { length: 11 })
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    forbiddenReceiverId: varchar("forbidden_receiver_id", { length: 11 })
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.eventId, table.giverId, table.forbiddenReceiverId],
+    }),
+  ]
+)
+
+export const invitation = pgTable(
+  "invitation",
+  {
+    token: text("token").notNull().primaryKey().$defaultFn(createToken),
+    eventId: text("event_id")
+      .notNull()
+      .references(() => event.id, { onDelete: "cascade" }),
+    email: text("email").notNull(),
+    normalizedEmail: text("normalized_email").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    accepted: boolean("accepted").notNull().default(false),
+    revoked: boolean("revoked").notNull().default(false),
+    expiresAt: timestamp("expires_at")
+      .notNull()
+      .default(sql`now() + interval '24 hours'`),
+  },
+  (table) => [
+    uniqueIndex("invitation_event_id_normalized_email_unique")
+      .on(table.eventId, table.normalizedEmail)
+      .where(sql`${table.revoked} = false`),
+  ]
+)
+
+export const userRelations = relations(user, ({ many }) => ({
+  eventParticipants: many(eventParticipant),
+}))
 
 export const eventRelations = relations(event, ({ many }) => ({
+  assignments: many(assignment),
   participants: many(eventParticipant),
 }))
 
@@ -124,8 +184,37 @@ export const eventParticipantRelations = relations(
       fields: [eventParticipant.userId],
       references: [user.id],
     }),
-    secretFriend: one(user, {
-      fields: [eventParticipant.secretFriendId],
+  })
+)
+
+export const assignmentRelations = relations(assignment, ({ one }) => ({
+  event: one(event, {
+    fields: [assignment.eventId],
+    references: [event.id],
+  }),
+  giver: one(user, {
+    fields: [assignment.giverId],
+    references: [user.id],
+  }),
+  receiver: one(user, {
+    fields: [assignment.receiverId],
+    references: [user.id],
+  }),
+}))
+
+export const assignmentExclusionRelations = relations(
+  assignmentExclusion,
+  ({ one }) => ({
+    event: one(event, {
+      fields: [assignmentExclusion.eventId],
+      references: [event.id],
+    }),
+    giver: one(user, {
+      fields: [assignmentExclusion.giverId],
+      references: [user.id],
+    }),
+    forbiddenReceiver: one(user, {
+      fields: [assignmentExclusion.forbiddenReceiverId],
       references: [user.id],
     }),
   })

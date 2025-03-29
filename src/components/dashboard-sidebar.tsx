@@ -30,7 +30,7 @@ const SIDEBAR_LINKS = [
 export function DashboardSidebar() {
   const pathname = usePathname()
 
-  const isActive = (path: string) => pathname === path
+  const isActive = (path: string) => pathname.startsWith(path)
 
   return (
     <aside className="bg-white w-64 hidden sm:block shadow-xl">

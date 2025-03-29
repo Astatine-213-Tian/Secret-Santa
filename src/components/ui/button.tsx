@@ -38,17 +38,53 @@ export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
+  loadingText?: string
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      loadingText,
+      onClick,
+      children,
+      disabled,
+      ...props
+    },
+    ref
+  ) => {
+    const [isLoading, setIsLoading] = React.useState(false)
+
+    const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!onClick) return
+
+      try {
+        const result = onClick(e) as unknown
+        if (result instanceof Promise) {
+          setIsLoading(true)
+          await result
+        }
+      } catch (error) {
+        console.error("Button click handler error:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
+        onClick={onClick ? handleClick : undefined}
+        disabled={isLoading || disabled}
         {...props}
-      />
+      >
+        {isLoading && !!loadingText ? loadingText : children}
+      </Comp>
     )
   }
 )

@@ -1,14 +1,13 @@
-import { getUserId } from "@/lib/auth/auth-server"
-
 import "server-only"
 
 import { eq } from "drizzle-orm"
 
+import { getUserInfo } from "@/lib/auth/auth-server"
 import { db } from "@/server/db"
 import { user } from "@/server/db/schema"
 
 export async function getProfile() {
-  const userId = await getUserId()
+  const { id: userId } = await getUserInfo()
   const result = await db.query.user.findFirst({
     where: eq(user.id, userId),
     columns: {

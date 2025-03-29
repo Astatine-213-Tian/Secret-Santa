@@ -1,13 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 
-import { getUserId } from "@/lib/auth/auth-server"
+import { getUserInfo } from "@/lib/auth/auth-server"
 import { db } from "../../db"
 import { user } from "../../db/schema"
 import { updateProfile } from "../profile"
 
 // Mock dependencies
 vi.mock("@/lib/auth/auth-server", () => ({
-  getUserId: vi.fn(),
+  getUserInfo: vi.fn(),
 }))
 
 vi.mock("../../db", () => ({
@@ -27,7 +27,14 @@ vi.mock("../../db/schema", () => ({
 }))
 
 describe("updateProfile", () => {
-  const mockUserId = "user-123"
+  const mockUserInfo = {
+    id: "user-123",
+    email: "test@example.com",
+    emailVerified: true,
+    name: "Test User",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }
   const validProfile = {
     name: "Test User",
     bio: "This is a test bio",
@@ -42,7 +49,7 @@ describe("updateProfile", () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(getUserId).mockResolvedValue(mockUserId)
+    vi.mocked(getUserInfo).mockResolvedValue(mockUserInfo)
   })
 
   afterEach(() => {
@@ -52,12 +59,12 @@ describe("updateProfile", () => {
   it("should update profile with valid inputs", async () => {
     await updateProfile(validProfile)
 
-    expect(getUserId).toHaveBeenCalledTimes(1)
+    expect(getUserInfo).toHaveBeenCalledTimes(1)
     expect(db.update).toHaveBeenCalledWith(user)
   })
 
   it("should throw error when user is not authenticated", async () => {
-    vi.mocked(getUserId).mockRejectedValue(new Error("Not authenticated"))
+    vi.mocked(getUserInfo).mockRejectedValue(new Error("Not authenticated"))
 
     await expect(updateProfile(validProfile)).rejects.toThrow(
       "Not authenticated"
