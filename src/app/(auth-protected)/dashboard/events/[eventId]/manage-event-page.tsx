@@ -22,7 +22,6 @@ import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { cn } from "@/lib/utils"
 import {
   addExclusionRule,
   createInvitation,
@@ -768,7 +767,9 @@ const AssignmentsTab = ({
             {isEditing
               ? tempAssignments.map((assignment) => (
                   <TableRow key={assignment.giver.id}>
-                    <TableCell>{assignment.giver.name}</TableCell>
+                    <TableCell className="font-medium">
+                      {assignment.giver.name}
+                    </TableCell>
                     <TableCell>
                       <Select
                         value={assignment.receiver?.id ?? ""}
@@ -804,7 +805,9 @@ const AssignmentsTab = ({
                 ))
               : assignments.map((assignment) => (
                   <TableRow key={assignment.giver.id}>
-                    <TableCell>{assignment.giver.name}</TableCell>
+                    <TableCell className="font-medium">
+                      {assignment.giver.name}
+                    </TableCell>
 
                     <TableCell>
                       {assignment.receiver?.name ?? "Pending"}
