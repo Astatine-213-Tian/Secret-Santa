@@ -52,12 +52,6 @@ export default function EventDetailPage(params: {
     },
   ]
 
-  // Handle delete button click
-  const handleLeave = () => {
-    leaveEvent(event.details.id)
-    redirect("/") // Redirects after form submission
-  }
-
   return (
     <Card>
       <CardHeader>
@@ -88,19 +82,11 @@ export default function EventDetailPage(params: {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  Are you sure you want to leave this event?
+                  Please contact your Organizer to leave the event.
                 </AlertDialogTitle>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleLeave}
-                  className={buttonVariants({
-                    variant: "destructive",
-                  })}
-                >
-                  Leave
-                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
