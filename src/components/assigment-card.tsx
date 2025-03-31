@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 
 import { AccessModeMap, getProfile } from "@/server/queries/profile"
 import { Card, CardDescription, CardHeader } from "@/components/ui/card"
@@ -70,7 +71,9 @@ export function AssigmentCard(assigment: AssigmentParams) {
             <UserInfoCard {...receiverProfileData} />
           </PopoverContent>
         </Popover>
-        <CardDescription>{assigment.event.name}</CardDescription>
+        <Link href={`/dashboard/events/${assigment.event.id}`}>
+          {assigment.event.name}
+        </Link>
       </CardHeader>
     </Card>
   )
