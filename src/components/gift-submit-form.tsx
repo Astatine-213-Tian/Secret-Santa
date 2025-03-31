@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 
+import { GiftSubmission } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -26,9 +26,9 @@ import { giftSubmitSchema } from "@/schemas/giftSubmit"
  * 2. Editing an existing event (initialValues is the existing event details)
  */
 export const GiftSubmitForm = (params: {
-  handleSubmit?: (data: z.infer<typeof giftSubmitSchema>) => void
+  handleSubmit?: (data: GiftSubmission) => void
 }) => {
-  const form = useForm<z.infer<typeof giftSubmitSchema>>({
+  const form = useForm<GiftSubmission>({
     resolver: zodResolver(giftSubmitSchema),
     defaultValues: {
       description: "",
