@@ -24,13 +24,18 @@ export async function removeParticipant(
 ) {
   const { id: userId } = await getUserInfo()
   const eventOrganizer = await db.query.event.findFirst({
-    where: and(eq(event.id, eventId), eq(event.organizerId, userId)),
+    where: and(eq(event.id, eventId)),
     columns: {
       id: true,
       drawCompleted: true,
     },
   })
+
   if (!eventOrganizer) {
+    throw new Error("Event not found")
+  }
+  // only the organizer or the participant themselves can remove themselves
+  if (eventOrganizer.id !== userId && participantId !== userId) {
     throw new Error("Unauthorized")
   }
   // cannot remove the organizer from the event
@@ -64,8 +69,8 @@ export async function removeParticipant(
 
     if (!eventOrganizer.drawCompleted) return
 
-    // attempt to redraw the assignments
     if (autoRedraw) {
+      // attempt to redraw the assignments
       const res = await drawAssignments(eventId)
       if (res.error) {
         await clearAssignments(eventId)
@@ -80,4 +85,13 @@ export async function removeParticipant(
       await clearAssignments(eventId)
     }
   })
+}
+
+/**
+ * Remove yourself from the event.
+ * TODO: alert the organizer.
+ */
+export async function removeSelfFromEvent(eventId: string) {
+  const { id: userId } = await getUserInfo()
+  removeParticipant(eventId, userId)
 }
