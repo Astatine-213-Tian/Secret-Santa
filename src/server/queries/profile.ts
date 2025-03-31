@@ -28,6 +28,15 @@ const accessModes = {
     bio: true,
     giftPreferences: true,
   },
+  my_event_organizer: {
+    id: true,
+    name: true,
+    email: true,
+    image: true,
+    createdAt: false,
+    bio: false,
+    giftPreferences: false,
+  },
   my_gift_receiver: {
     id: true,
     name: true,

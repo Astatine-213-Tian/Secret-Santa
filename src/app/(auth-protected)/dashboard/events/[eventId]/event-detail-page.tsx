@@ -1,26 +1,7 @@
 import { ParticipantViewEvent } from "@/server/queries/event"
-import { getOtherUserProfile } from "@/server/queries/profile"
-import { Avatar } from "@/components/ui/avatar"
+import { getProfile } from "@/server/queries/profile"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-// TODO: create reusable 'ProfileView' component (to also use in SecretFriends page)
-function OrganizerDetailsCard({
-  email,
-  name,
-  avatarUrl,
-}: {
-  email: string
-  name: string
-  avatarUrl: string | null
-}) {
-  return (
-    <div className="flex gap-4">
-      <Avatar alt="OrganzierAvatar" src={avatarUrl} />
-      <div>{name}</div>
-      <div>{email}</div>
-    </div>
-  )
-}
+import { UserInfoCard } from "@/components/user-profile-card"
 
 export default async function EventDetailPage(event: ParticipantViewEvent) {
   // Helper to easily map to UI elements
@@ -43,9 +24,12 @@ export default async function EventDetailPage(event: ParticipantViewEvent) {
     },
   ]
 
-  const organizerDetails = await getOtherUserProfile(event.details.organizerId)
+  // get details about the organizer
+  const organizerDetails = await getProfile(
+    "my_event_organizer",
+    event.details.organizerId
+  )
 
-  // TODO: only display avatar, but show popup on click
   return (
     <Card>
       <CardHeader>
@@ -59,7 +43,7 @@ export default async function EventDetailPage(event: ParticipantViewEvent) {
           </div>
         ))}
         <div className="font-bold">Organizer</div>
-        <OrganizerDetailsCard {...organizerDetails} />
+        <UserInfoCard {...organizerDetails} />
       </CardContent>
     </Card>
   )
