@@ -56,7 +56,13 @@ export async function getJoinedEvents() {
         gte(event.eventDate, new Date())
       )
     )
-    .leftJoin(assignment, eq(assignment.eventId, event.id))
+    .leftJoin(
+      assignment,
+      and(
+        eq(assignment.eventId, event.id),
+        eq(assignment.giverId, userId) // Only get assignments where the user is the giver
+      )
+    )
     .leftJoin(user, eq(assignment.receiverId, user.id))
     .orderBy(desc(event.eventDate))
 

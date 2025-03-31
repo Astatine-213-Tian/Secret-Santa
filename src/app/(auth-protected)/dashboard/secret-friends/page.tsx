@@ -15,7 +15,7 @@ export default async function GiftsPage() {
           <div>You are not assigned to anybody yet. Try joining an event!</div>
         ) : (
           userAssigments.map((assigment, idx) => (
-            <AssigmentCard key={idx} {...assigment} />
+            <AssigmentCard key={assigment.event.id} {...assigment} />
           ))
         )}
       </div>

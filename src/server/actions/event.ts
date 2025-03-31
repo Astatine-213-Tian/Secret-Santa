@@ -46,6 +46,15 @@ export async function createEvent(ev: z.infer<typeof eventDetailsSchema>) {
   return eventId
 }
 
+/**
+ * Remove yourself from the event.
+ * TODO: alert the organizer.
+ */
+export async function leaveEvent(eventId: string) {
+  const { id: userId } = await getUserInfo()
+  removeParticipant(eventId, userId)
+}
+
 export async function updateEvent(
   eventId: string,
   ev: z.infer<typeof eventDetailsSchema>
