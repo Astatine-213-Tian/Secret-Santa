@@ -3,7 +3,6 @@
 import { redirect } from "next/navigation"
 import { Trash } from "lucide-react"
 
-import { leaveEvent } from "@/server/actions/event"
 import { ParticipantViewEvent } from "@/server/queries/event"
 import { getProfile } from "@/server/queries/profile"
 import {
