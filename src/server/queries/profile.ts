@@ -1,4 +1,5 @@
-import "server-only"
+// import "server-only"
+"use server"
 
 import { eq, InferSelectModel } from "drizzle-orm"
 
@@ -60,7 +61,7 @@ const accessModes = {
 type User = InferSelectModel<typeof user>
 
 // Create a type that maps each access mode to a filtered user type
-type AccessModeMap = {
+export type AccessModeMap = {
   [K in keyof typeof accessModes]: {
     [P in keyof (typeof accessModes)[K] as (typeof accessModes)[K][P] extends true
       ? P

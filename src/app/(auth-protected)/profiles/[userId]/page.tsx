@@ -7,13 +7,13 @@ import { UserInfoCard } from "@/components/user-profile-card"
 /**
  * For a user to view some other user's profile
  */
-export default async function UserProfilesPage({
-  params,
-}: {
-  params: Promise<{ userId: string }>
-}) {
-  const { userId } = await params
-  const profile = await getProfile("my_event_participant", userId)
+// export default async function UserProfilesPage({
+//   params,
+// }: {
+//   params: Promise<{ userId: string }>
+// }) {
+//   const { userId } = await params
+//   const profile = await getProfile("my_event_participant", userId)
 
-  return <UserInfoCard {...profile} />
-}
+//   return <UserInfoCard {...profile} />
+// }
