@@ -30,7 +30,7 @@ import { eventDetailsSchema } from "@/schemas/event"
 export const EventForm = (params: {
   initialValues?: z.infer<typeof eventDetailsSchema>
   submitButtonText: string
-  handleSubmit: (data: z.infer<typeof eventDetailsSchema>) => void
+  handleSubmit?: (data: z.infer<typeof eventDetailsSchema>) => void
 }) => {
   const form = useForm<z.infer<typeof eventDetailsSchema>>({
     resolver: zodResolver(eventDetailsSchema),
@@ -50,7 +50,7 @@ export const EventForm = (params: {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit((data) => {
-          params.handleSubmit(data)
+          params.handleSubmit?.(data)
           form.reset(data)
         })}
         className="flex flex-col gap-4"

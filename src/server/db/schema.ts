@@ -99,6 +99,7 @@ export const eventParticipant = pgTable(
   },
   (table) => [primaryKey({ columns: [table.eventId, table.userId] })]
 )
+
 export const assignment = pgTable(
   "assignment",
   {

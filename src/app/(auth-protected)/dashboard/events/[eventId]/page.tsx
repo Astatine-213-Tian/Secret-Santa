@@ -23,7 +23,7 @@ export default async function EventDetailsPage({
       {role === "organizer" ? (
         <ManageEventPage {...eventInfo} />
       ) : (
-        <EventDetailPage />
+        <EventDetailPage {...eventInfo} />
       )}
     </div>
   )

@@ -37,3 +37,28 @@ export async function getProfile() {
     avatarUrl: result.image,
   }
 }
+
+/**
+ * Get another user's (basic) profile info (e.g. participant can see who is the organizer)
+ * does not return as much senstitive info
+ */
+export async function getOtherUserProfile(userId: string) {
+  const result = await db.query.user.findFirst({
+    where: eq(user.id, userId),
+    columns: {
+      email: true,
+      name: true,
+      image: true,
+    },
+  })
+
+  if (!result) {
+    throw new Error("Profile not found")
+  }
+
+  return {
+    email: result.email,
+    name: result.name,
+    avatarUrl: result.image,
+  }
+}

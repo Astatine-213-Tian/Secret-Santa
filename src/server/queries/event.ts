@@ -251,3 +251,28 @@ function fetchAssignments(eventId: string) {
     .where(eq(assignment.eventId, eventId))
     .orderBy(asc(userGiver.name))
 }
+
+/**
+ * Fetch All Assigments for the current user
+ */
+export async function fetchUserAssigments() {
+  const { id: userId } = await getUserInfo()
+  const userReceiver = alias(user, "receiver")
+  const eventDetails = alias(event, "event")
+
+  return db
+    .select({
+      event: {
+        id: eventDetails.id,
+        name: eventDetails.name,
+      },
+      receiver: {
+        id: userReceiver.id,
+        name: userReceiver.name,
+      },
+    })
+    .from(assignment)
+    .innerJoin(eventDetails, eq(assignment.eventId, eventDetails.id))
+    .innerJoin(userReceiver, eq(assignment.receiverId, userReceiver.id))
+    .where(eq(assignment.giverId, userId))
+}
