@@ -261,7 +261,7 @@ function fetchAssignments(eventId: string) {
 /**
  * Fetch All Assigments for the current user
  */
-export async function fetchUserAssigments() {
+export async function fetchUserGiftReceivers() {
   const { id: userId } = await getUserInfo()
   const userReceiver = alias(user, "receiver")
   const eventDetails = alias(event, "event")
@@ -281,4 +281,36 @@ export async function fetchUserAssigments() {
     .innerJoin(eventDetails, eq(assignment.eventId, eventDetails.id))
     .innerJoin(userReceiver, eq(assignment.receiverId, userReceiver.id))
     .where(eq(assignment.giverId, userId))
+}
+
+export async function fetchUserGiftGivers() {
+  const { id: userId } = await getUserInfo()
+
+  const userGiver = alias(user, "giver")
+  const eventDetails = alias(event, "event")
+
+  const results = await db
+    .select({
+      event: {
+        id: eventDetails.id,
+        name: eventDetails.name,
+        date: eventDetails.eventDate,
+      },
+      giver: {
+        id: userGiver.id,
+        name: userGiver.name,
+      },
+    })
+    .from(assignment)
+    .innerJoin(eventDetails, eq(assignment.eventId, eventDetails.id))
+    .innerJoin(userGiver, eq(assignment.giverId, userGiver.id))
+    .where(eq(assignment.receiverId, userId))
+  // Modify the results: Remove `receiver` if event is in the future
+  return results.map(({ event, giver }) => ({
+    event: {
+      id: event.id,
+      name: event.name,
+    },
+    giver: new Date(event.date) > new Date() ? null : giver, // Remove receiver if event is in the future
+  }))
 }
