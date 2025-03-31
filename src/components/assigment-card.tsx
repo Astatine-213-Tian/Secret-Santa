@@ -1,13 +1,8 @@
 "use client"
 
-import { redirect } from "next/navigation"
+import Link from "next/link"
 
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardDescription, CardHeader } from "@/components/ui/card"
 
 export function AssigmentCard(assigment: {
   event: {
@@ -19,20 +14,15 @@ export function AssigmentCard(assigment: {
     name: string
   }
 }) {
-  const onUserClick = (userId: string) => {
-    // Go to the user's profile page
-    redirect(`/profiles/${userId}`)
-  }
-
   return (
     <Card className="hover:scale-101  transition-transform duration-300">
       <CardHeader>
-        <CardTitle
-          className="hover:underline bg-red"
-          onClick={() => onUserClick(assigment.receiver.id)}
+        <Link
+          className="hover:underline"
+          href={`/profiles/${assigment.receiver.id}`}
         >
           {assigment.receiver.name}
-        </CardTitle>
+        </Link>
         <CardDescription>{assigment.event.name}</CardDescription>
       </CardHeader>
     </Card>
