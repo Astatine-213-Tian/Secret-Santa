@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { z } from "zod"
 
 import { AccessModeMap, getProfile } from "@/server/queries/profile"
 import { Card, CardDescription, CardHeader } from "@/components/ui/card"
@@ -10,6 +11,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { giftSubmitSchema } from "@/schemas/giftSubmit"
+import { GiftSubmitForm } from "./gift-submit-form"
 import { Button } from "./ui/button"
 import { UserInfoCard } from "./user-profile-card"
 
@@ -36,6 +39,8 @@ export function ReceiverAssigmentCard(assignment: {
     setProfileData(result)
   }
 
+  function handleFormSubmit(data: z.infer<typeof giftSubmitSchema>) {}
+
   return (
     <Card className="flex items-center hover:scale-101  transition-transform duration-300">
       <CardHeader className="w-full">
@@ -54,7 +59,17 @@ export function ReceiverAssigmentCard(assignment: {
           {assignment.event.name}
         </Link>
       </CardHeader>
-      <Button className="mr-4">Submit</Button>
+      <Popover>
+        <PopoverTrigger
+          className="mr-4 w-[max-content] hover:cursor-pointer"
+          onClick={handleNameClick}
+        >
+          Submit
+        </PopoverTrigger>
+        <PopoverContent className="min-w-200">
+          <GiftSubmitForm />
+        </PopoverContent>
+      </Popover>
     </Card>
   )
 }
