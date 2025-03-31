@@ -21,7 +21,17 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserInfoCard } from "@/components/user-profile-card"
 
-export default async function EventDetailPage(event: ParticipantViewEvent) {
+export default function EventDetailPage(params: {
+  event: ParticipantViewEvent
+  organizer: {
+    id: string
+    name: string
+    email: string
+    image: string | null
+  }
+}) {
+  const { event, organizer } = params
+
   // Helper to easily map to UI elements
   const event_details = [
     {
@@ -42,12 +52,6 @@ export default async function EventDetailPage(event: ParticipantViewEvent) {
     },
   ]
 
-  // get details about the organizer
-  const organizerDetails = await getProfile(
-    "my_event_organizer",
-    event.details.organizerId
-  )
-
   // Handle delete button click
   const handleLeave = () => {
     leaveEvent(event.details.id)
@@ -67,7 +71,7 @@ export default async function EventDetailPage(event: ParticipantViewEvent) {
           </div>
         ))}
         <div className="font-bold">Organizer</div>
-        <UserInfoCard {...organizerDetails} />
+        <UserInfoCard {...organizer} />
       </CardContent>
       <Card>
         <CardHeader>
@@ -78,18 +82,14 @@ export default async function EventDetailPage(event: ParticipantViewEvent) {
             <AlertDialogTrigger asChild>
               <Button variant="destructive">
                 <Trash className="w-4 h-4" />
-                Delete Event
+                Leave Event
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  Are you sure you want to delete this event?
+                  Are you sure you want to leave this event?
                 </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will delete the event and
-                  all associated data.
-                </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -99,7 +99,7 @@ export default async function EventDetailPage(event: ParticipantViewEvent) {
                     variant: "destructive",
                   })}
                 >
-                  Delete
+                  Leave
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

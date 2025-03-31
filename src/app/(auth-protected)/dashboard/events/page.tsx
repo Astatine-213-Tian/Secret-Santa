@@ -1,4 +1,3 @@
-import { join } from "path"
 import Link from "next/link"
 import { Plus } from "lucide-react"
 
@@ -11,8 +10,6 @@ import { OrganizedEventCard } from "@/components/organized-event-card"
 export default async function EventsPage() {
   const organizedEvents = await getOrganizedEvents()
   const joinedEvents = await getJoinedEvents()
-
-  console.log(joinedEvents)
 
   return (
     <div className="flex flex-col gap-6">

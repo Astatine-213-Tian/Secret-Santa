@@ -51,8 +51,7 @@ export async function createEvent(ev: z.infer<typeof eventDetailsSchema>) {
  * TODO: alert the organizer.
  */
 export async function leaveEvent(eventId: string) {
-  const { id: userId } = await getUserInfo()
-  removeParticipant(eventId, userId)
+  removeParticipant(eventId, undefined) // remove self
 }
 
 export async function updateEvent(
@@ -245,14 +244,25 @@ export async function resendInvitation(eventId: string, email: string) {
   console.log("invitationLink", invitationLink)
 }
 
+/**
+ *
+ * @param eventId to be removed from
+ * @param participantId if not specified, user is removing themself
+ */
 export async function removeParticipant(
   eventId: string,
-  participantId: string
+  participantId?: string
 ) {
-  const { id: organizerId } = await checkOrganizer(eventId)
-  // if the participant is the organizer, throw an error
-  if (participantId === organizerId) {
-    throw new Error("Cannot remove organizer from event")
+  if (participantId) {
+    // Then we're trying to remove somebody else
+    const { id: organizerId } = await checkOrganizer(eventId)
+    // if the participant is the organizer, throw an error
+    if (participantId === organizerId) {
+      throw new Error("Cannot remove organizer from event")
+    }
+  } else {
+    // we wish to remove ourself
+    participantId = (await getUserInfo()).id
   }
 
   await db.transaction(async (tx) => {

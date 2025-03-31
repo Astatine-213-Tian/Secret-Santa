@@ -1,4 +1,5 @@
 import { getEventInfo } from "@/server/queries/event"
+import { getProfile } from "@/server/queries/profile"
 import EventDetailPage from "./event-detail-page"
 import ManageEventPage from "./manage-event-page"
 
@@ -15,16 +16,15 @@ export default async function EventDetailsPage({
   const { eventId } = await params
   const { eventInfo, role } = await getEventInfo(eventId)
 
-  // UI depends on whether the user is the organizer of the event. If they are,
-  // they can manage the event. Otherwise, they can only view the details.
+  if (role == "organizer") {
+    return <ManageEventPage {...eventInfo} />
+  }
 
-  return (
-    <div>
-      {role === "organizer" ? (
-        <ManageEventPage {...eventInfo} />
-      ) : (
-        <EventDetailPage {...eventInfo} />
-      )}
-    </div>
+  // get details about the organizer
+  const organizerDetails = await getProfile(
+    "my_event_organizer",
+    eventInfo.details.organizerId
   )
+
+  return <EventDetailPage event={eventInfo} organizer={organizerDetails} />
 }
