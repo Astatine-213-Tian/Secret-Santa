@@ -7,7 +7,6 @@ import { db } from "@/server/db"
 import { user } from "@/server/db/schema"
 
 // Get the full user type from Drizzle
-type User = InferSelectModel<typeof user>
 
 // Define access modes with column selections
 const accessModes = {
@@ -42,11 +41,17 @@ const accessModes = {
     name: true,
     email: true,
     image: true,
+    bio: false,
+    giftPreferences: false,
+    createdAt: false,
   },
 } as const
 
+// Get the full user type from Drizzle
+type User = InferSelectModel<typeof user>
+
 // Create a type that maps each access mode to a filtered user type
-export type AccessModeMap = {
+type AccessModeMap = {
   [K in keyof typeof accessModes]: {
     [P in keyof (typeof accessModes)[K] as (typeof accessModes)[K][P] extends true
       ? P
@@ -61,9 +66,9 @@ export type AccessModeMap = {
  * @returns A user profile with fields determined by the access mode
  */
 export async function getProfile<T extends keyof typeof accessModes>(
-  accessMode: T = "my_profile" as T,
+  accessMode: T,
   userId?: string
-): Promise<AccessModeMap[T]> {
+) {
   if (!userId && accessMode === "my_profile") {
     // get profile-info for the current user.
     const userInfo = await getUserInfo()
