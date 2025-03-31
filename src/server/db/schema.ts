@@ -13,7 +13,7 @@ import {
 } from "drizzle-orm/pg-core"
 import { nanoid } from "nanoid"
 
-import type { GiftPreferences, GiftSubmission } from "@/lib/types"
+import type { GiftPreferences, GiftSubmitFormData } from "@/lib/types"
 
 const createId = () => nanoid(11)
 const createToken = () => nanoid(20)
@@ -131,7 +131,7 @@ export const giftSubmit = pgTable(
       .notNull()
       .references(() => assignment.giverId, { onDelete: "cascade" }),
     submittedAt: timestamp("submitted_at").notNull().defaultNow(),
-    giftDetails: jsonb("gift_details").notNull().$type<GiftSubmission>(),
+    giftDetails: jsonb("gift_details").notNull().$type<GiftSubmitFormData>(),
   },
   (table) => [
     primaryKey({ columns: [table.assignmentEventId, table.assignmentGiverId] }),

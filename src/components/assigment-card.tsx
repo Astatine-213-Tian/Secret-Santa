@@ -4,6 +4,8 @@ import { useState } from "react"
 import Link from "next/link"
 import { z } from "zod"
 
+import { GiftSubmitFormData } from "@/lib/types"
+import { submitGift } from "@/server/actions/giftSubmit"
 import { AccessModeMap, getProfile } from "@/server/queries/profile"
 import { Card, CardDescription, CardHeader } from "@/components/ui/card"
 import {
@@ -11,13 +13,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { giftSubmitSchema } from "@/schemas/giftSubmit"
 import { GiftSubmitForm } from "./gift-submit-form"
 import { Button } from "./ui/button"
 import { UserInfoCard } from "./user-profile-card"
 
+// submit form
+export const giftSubmitFormSchema = z.object({
+  description: z.string().min(1, "Description is required"),
+  note: z.string().optional(),
+})
+
 // Assigment is either: Receiver or Gifter (type of current user)
 
+/**
+ * This is a receiver of the current user.
+ */
 export function ReceiverAssigmentCard(assignment: {
   event: {
     id: string
@@ -39,7 +49,9 @@ export function ReceiverAssigmentCard(assignment: {
     setProfileData(result)
   }
 
-  function handleFormSubmit(data: z.infer<typeof giftSubmitSchema>) {}
+  function onFormSubmit(data: GiftSubmitFormData) {
+    submitGift(assignment.event.id, data)
+  }
 
   return (
     <Card className="flex items-center hover:scale-101  transition-transform duration-300">
@@ -67,7 +79,7 @@ export function ReceiverAssigmentCard(assignment: {
           Submit
         </PopoverTrigger>
         <PopoverContent className="min-w-200">
-          <GiftSubmitForm />
+          <GiftSubmitForm handleSubmit={onFormSubmit} />
         </PopoverContent>
       </Popover>
     </Card>

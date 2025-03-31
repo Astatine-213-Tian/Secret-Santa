@@ -6,7 +6,7 @@ export interface GiftPreferences {
   additionalInfo: string
 }
 
-export interface GiftSubmission {
+export interface GiftSubmitFormData {
   description: string
   note?: string
 }
