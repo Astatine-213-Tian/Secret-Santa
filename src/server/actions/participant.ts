@@ -28,7 +28,7 @@ export async function removeParticipant(
   const eventOrganizer = await db.query.event.findFirst({
     where: and(eq(event.id, eventId)),
     columns: {
-      id: true,
+      organizerId: true,
       drawCompleted: true,
     },
   })
@@ -37,11 +37,11 @@ export async function removeParticipant(
     throw new Error("Event not found")
   }
   // only the organizer or the participant themselves can remove themselves
-  if (eventOrganizer.id !== userId && participantId !== userId) {
+  if (eventOrganizer.organizerId !== userId && participantId !== userId) {
     throw new Error("Unauthorized")
   }
   // cannot remove the organizer from the event
-  if (participantId === eventOrganizer.id) {
+  if (participantId === eventOrganizer.organizerId) {
     throw new Error("Cannot remove organizer from event")
   }
 

@@ -10,7 +10,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -48,8 +47,11 @@ const ParticipantsTab = ({
 }: ParticipantsTabProps) => {
   const [participants, setParticipants] = useState(initialParticipants)
 
-  const handleRemoveParticipant = async (participantId: string) => {
-    await removeParticipant(eventId, participantId)
+  const handleRemoveParticipant = async (
+    participantId: string,
+    autoDraw: boolean
+  ) => {
+    await removeParticipant(eventId, participantId, autoDraw)
     setParticipants(participants.filter((p) => p.id !== participantId))
   }
 
@@ -90,22 +92,49 @@ const ParticipantsTab = ({
                           <AlertDialogTitle>
                             Are you sure you want to remove {participant.name}?
                           </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This will also remove any assignments and rules
-                            associated with this participant.
-                          </AlertDialogDescription>
+                          <div className="text-sm space-y-2 text-muted-foreground">
+                            <p>
+                              This participant may already have assignments in
+                              the Secret Santa draw. Please choose one of the
+                              following actions:
+                            </p>
+                            <ul className="list-disc pl-5">
+                              <li>
+                                <strong>Remove and Redraw:</strong> Remove this
+                                participant and <strong>reassign</strong> their
+                                Secret Santa assignments to{" "}
+                                <strong>other participants</strong>.
+                              </li>
+                              <li>
+                                <strong>Remove and Clear:</strong> Remove this
+                                participant and <strong>clear</strong> the
+                                Secret Santa assignments for{" "}
+                                <strong>all</strong> other participants.
+                              </li>
+                            </ul>
+                          </div>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() =>
-                              handleRemoveParticipant(participant.id)
+                              handleRemoveParticipant(participant.id, false)
                             }
                             className={buttonVariants({
                               variant: "destructive",
                             })}
                           >
-                            Remove
+                            Remove and Clear
+                          </AlertDialogAction>
+                          <AlertDialogAction
+                            onClick={() =>
+                              handleRemoveParticipant(participant.id, true)
+                            }
+                            className={buttonVariants({
+                              variant: "destructive",
+                            })}
+                          >
+                            Remove and Redraw
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
