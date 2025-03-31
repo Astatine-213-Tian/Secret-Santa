@@ -32,6 +32,8 @@ export async function addExclusionRule(
   if (!result[0]) {
     return { error: "Rule already exists" }
   }
+
+  revalidatePath(`/dashboard/events/${eventId}`)
 }
 
 export async function deleteExclusionRule(
