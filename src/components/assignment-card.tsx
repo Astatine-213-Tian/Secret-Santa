@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import Link from "next/link"
 
 import { AccessModeMap, getProfile } from "@/server/queries/profile"
 import { Card, CardDescription, CardHeader } from "@/components/ui/card"
@@ -15,7 +14,7 @@ import { UserInfoCard } from "./user-profile-card"
 /**
  * Links to details about both: gift-receiver (User), event-details (Event)
  */
-export function AssigmentCard(assigment: {
+export function AssignmentCard(assignment: {
   event: {
     id: string
     name: string
@@ -32,7 +31,10 @@ export function AssigmentCard(assigment: {
   // When the user clicks the popover, fetch the user data.
   async function handleOpen() {
     if (!receiverProfileData) {
-      const result = await getProfile("my_gift_receiver", assigment.receiver.id)
+      const result = await getProfile(
+        "my_gift_receiver",
+        assignment.receiver.id
+      )
       setReceiverProfileData(result)
     }
   }
@@ -45,13 +47,13 @@ export function AssigmentCard(assigment: {
             className="w-[max-content] hover:font-bold duration-300"
             onClick={handleOpen}
           >
-            {assigment.receiver.name}
+            {assignment.receiver.name}
           </PopoverTrigger>
           <PopoverContent className="w-full">
             <UserInfoCard {...receiverProfileData} />
           </PopoverContent>
         </Popover>
-        <CardDescription>{assigment.event.name}</CardDescription>
+        <CardDescription>{assignment.event.name}</CardDescription>
       </CardHeader>
     </Card>
   )

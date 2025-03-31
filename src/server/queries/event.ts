@@ -259,9 +259,9 @@ function fetchAssignments(eventId: string) {
 }
 
 /**
- * Fetch All Assigments for the current user
+ * Fetch All Assignments for the current user
  */
-export async function fetchUserAssigments() {
+export async function fetchUserAssignments() {
   const { id: userId } = await getUserInfo()
   const userReceiver = alias(user, "receiver")
   const eventDetails = alias(event, "event")
