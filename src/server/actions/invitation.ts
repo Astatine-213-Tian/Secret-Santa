@@ -1,3 +1,5 @@
+"use server"
+
 import { and, eq, ne } from "drizzle-orm"
 import { normalizeEmail } from "validator"
 

@@ -3,7 +3,7 @@ import { format } from "date-fns"
 import { CircleDollarSign, Gift, MapPin } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "./ui/button"
+import { buttonVariants } from "./ui/button-variants"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 
 interface JoinedEventCardProps {

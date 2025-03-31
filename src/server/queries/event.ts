@@ -25,6 +25,7 @@ export async function getOrganizedEvents() {
       eventDate: event.eventDate,
       location: event.location,
       drawCompleted: event.drawCompleted,
+      budget: event.budget,
     })
     .from(event)
     .where(and(eq(event.organizerId, userId), gte(event.eventDate, new Date())))
@@ -181,6 +182,22 @@ export async function getEventInfo(eventId: string): Promise<EventViewReturn> {
   }
 }
 
+export async function getEventParticipants(eventId: string) {
+  return await fetchParticipants(eventId)
+}
+
+export async function getEventInvitations(eventId: string) {
+  return await fetchNotAcceptedInvitations(eventId)
+}
+
+export async function getEventExclusionRules(eventId: string) {
+  return await fetchExclusionRules(eventId)
+}
+
+export async function getEventAssignments(eventId: string) {
+  return await fetchAssignments(eventId)
+}
+
 // return query to fetch participants of an event
 function fetchParticipants(eventId: string) {
   return db
@@ -201,7 +218,7 @@ function fetchNotAcceptedInvitations(eventId: string) {
       email: invitation.email,
       status: sql<
         "pending" | "expired" | "rejected"
-      >`CASE WHEN ${invitation.expiresAt} < now() THEN 'expired' ELSE ${invitation.status} END`,
+      >`CASE WHEN ${invitation.expiresAt} < now() THEN 'expired' ELSE ${invitation.status}::text END`,
     })
     .from(invitation)
     .where(
@@ -266,7 +283,7 @@ export async function fetchUserAssignments() {
   const userReceiver = alias(user, "receiver")
   const eventDetails = alias(event, "event")
 
-  return db
+  return await db
     .select({
       event: {
         id: eventDetails.id,

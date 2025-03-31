@@ -1,9 +1,9 @@
 import Link from "next/link"
 import { format } from "date-fns"
-import { CalendarClock, MapPin } from "lucide-react"
+import { CalendarClock, DollarSign, MapPin } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "./ui/button"
+import { buttonVariants } from "./ui/button-variants"
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 
 interface OrganizedEventCardProps {
@@ -12,6 +12,7 @@ interface OrganizedEventCardProps {
   eventDate: Date
   location: string
   drawCompleted: boolean
+  budget: number
 }
 
 export const OrganizedEventCard = ({
@@ -20,6 +21,7 @@ export const OrganizedEventCard = ({
   eventDate,
   location,
   drawCompleted,
+  budget,
 }: OrganizedEventCardProps) => {
   return (
     <Card>
@@ -42,6 +44,11 @@ export const OrganizedEventCard = ({
             <span className="font-medium">
               {drawCompleted ? "Completed" : "Pending"}
             </span>
+          </p>
+          <p className="text-sm text-gray-600 flex items-center">
+            <DollarSign className="w-4 h-4 mr-1" />
+            Budget:&nbsp;
+            <span className="font-medium">{budget}</span>
           </p>
         </div>
         <Link

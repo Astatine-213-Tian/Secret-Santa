@@ -1,3 +1,5 @@
+"use server"
+
 import { and, eq, or } from "drizzle-orm"
 
 import { getUserInfo } from "@/lib/auth/auth-server"
