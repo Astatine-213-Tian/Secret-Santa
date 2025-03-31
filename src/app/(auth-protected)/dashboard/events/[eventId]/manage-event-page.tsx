@@ -24,16 +24,17 @@ import { z } from "zod"
 
 import {
   addExclusionRule,
-  createInvitation,
-  deleteEvent,
   deleteExclusionRule,
   drawAssignments,
   editAssignment,
-  removeParticipant,
+} from "@/server/actions/assignment"
+import { deleteEvent, updateEvent } from "@/server/actions/event"
+import {
+  createInvitation,
   resendInvitation,
   revokeInvitation,
-  updateEvent,
-} from "@/server/actions/event"
+} from "@/server/actions/invitation"
+import { removeParticipant } from "@/server/actions/participant"
 import { OrganizerViewEvent } from "@/server/queries/event"
 import {
   AlertDialog,
@@ -660,10 +661,10 @@ const AssignmentsTab = ({
 
   const handleDrawAssignments = async () => {
     const res = await drawAssignments(eventId)
-    if ("error" in res) {
+    if (res.error) {
       toast.error(res.error)
-    } else {
-      setAssignments(res)
+    } else if (res.data) {
+      setAssignments(res.data)
     }
   }
 

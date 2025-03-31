@@ -3,6 +3,7 @@ import {
   boolean,
   integer,
   jsonb,
+  pgEnum,
   pgTable,
   primaryKey,
   text,
@@ -140,6 +141,12 @@ export const assignmentExclusion = pgTable(
   ]
 )
 
+export const invitationStatus = pgEnum("invitation_status", [
+  "pending",
+  "accepted",
+  "rejected",
+])
+
 export const invitation = pgTable(
   "invitation",
   {
@@ -151,7 +158,7 @@ export const invitation = pgTable(
     normalizedEmail: text("normalized_email").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
-    accepted: boolean("accepted").notNull().default(false),
+    status: invitationStatus("status").notNull().default("pending"),
     revoked: boolean("revoked").notNull().default(false),
     expiresAt: timestamp("expires_at")
       .notNull()
