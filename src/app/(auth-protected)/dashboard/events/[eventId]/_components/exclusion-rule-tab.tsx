@@ -64,11 +64,9 @@ interface ExclusionRulesTabProps {
 
 const ExclusionRulesTab = ({
   eventId,
-  exclusionRules: initialExclusionRules,
+  exclusionRules,
   participants,
 }: ExclusionRulesTabProps) => {
-  const [exclusionRules, setExclusionRules] = useState(initialExclusionRules)
-
   const [selectedGiver, setSelectedGiver] = useState<string>()
   const [selectedForbiddenReceiver, setSelectedForbiddenReceiver] =
     useState<string>()
@@ -85,15 +83,6 @@ const ExclusionRulesTab = ({
       if (res?.error) {
         toast.error(res.error)
       } else {
-        setExclusionRules([
-          ...exclusionRules,
-          {
-            giver: participants.find((p) => p.id === selectedGiver)!,
-            forbiddenReceiver: participants.find(
-              (p) => p.id === selectedForbiddenReceiver
-            )!,
-          },
-        ])
         setSelectedGiver(undefined)
         setSelectedForbiddenReceiver(undefined)
         setIsDialogOpen(false)
@@ -106,13 +95,6 @@ const ExclusionRulesTab = ({
     forbiddenReceiverId: string
   ) => {
     await deleteExclusionRule(eventId, giverId, forbiddenReceiverId)
-    setExclusionRules(
-      exclusionRules.filter(
-        (r) =>
-          r.giver.id !== giverId &&
-          r.forbiddenReceiver.id !== forbiddenReceiverId
-      )
-    )
   }
 
   return (

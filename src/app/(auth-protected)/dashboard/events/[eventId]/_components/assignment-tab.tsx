@@ -50,21 +50,18 @@ interface AssignmentsTabProps {
 }
 
 const AssignmentsTab = ({
-  assignments: initialAssignments,
+  assignments,
   eventId,
   drawingComplete,
   participants,
 }: AssignmentsTabProps) => {
-  const [assignments, setAssignments] = useState(initialAssignments)
-  const [tempAssignments, setTempAssignments] = useState(initialAssignments)
+  const [tempAssignments, setTempAssignments] = useState(assignments)
   const [isEditing, setIsEditing] = useState(false)
 
   const handleDrawAssignments = async () => {
     const res = await drawAssignments(eventId)
-    if (res.error) {
+    if (res?.error) {
       toast.error(res.error)
-    } else if (res.data) {
-      setAssignments(res.data)
     }
   }
 
@@ -83,7 +80,6 @@ const AssignmentsTab = ({
     if (res?.error) {
       toast.error(res.error)
     } else {
-      setAssignments(tempAssignments)
       setIsEditing(false)
     }
   }

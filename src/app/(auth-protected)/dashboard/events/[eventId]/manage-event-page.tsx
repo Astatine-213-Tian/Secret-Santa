@@ -2,13 +2,7 @@ import { redirect } from "next/navigation"
 import { Trash } from "lucide-react"
 
 import { deleteEvent } from "@/server/actions/event"
-import {
-  getEventAssignments,
-  getEventExclusionRules,
-  getEventInvitations,
-  getEventParticipants,
-  OrganizerViewEvent,
-} from "@/server/queries/event"
+import { OrganizerViewEvent } from "@/server/queries/event"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -31,12 +25,9 @@ import ParticipantsTab from "./_components/participant-tab"
 import { tabConfig, TabName } from "./_components/tab-config"
 import UpdateEventForm from "./_components/update-event-form"
 
-export default async function ManageEventPage(event: OrganizerViewEvent) {
-  const { details } = event
-  const participants = await getEventParticipants(details.id)
-  const invitations = await getEventInvitations(details.id)
-  const exclusionRules = await getEventExclusionRules(details.id)
-  const assignments = await getEventAssignments(details.id)
+export default function ManageEventPage(event: OrganizerViewEvent) {
+  const { details, participants, invitations, exclusionRules, assignments } =
+    event
 
   // Handle delete button click
   const handleDelete = async () => {

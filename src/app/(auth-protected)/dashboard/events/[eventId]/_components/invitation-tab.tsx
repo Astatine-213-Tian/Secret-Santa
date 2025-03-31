@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { RefreshCcw, Table, Trash, UserPlus } from "lucide-react"
+import { RefreshCcw, Trash, UserPlus } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import { z } from "zod"
@@ -35,6 +34,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
+  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -49,15 +49,9 @@ interface InvitationsTabProps {
   invitations: OrganizerViewEvent["invitations"]
 }
 
-const InvitationsTab = ({
-  eventId,
-  invitations: initialInvitations,
-}: InvitationsTabProps) => {
-  const [invitations, setInvitations] = useState(initialInvitations)
-
+const InvitationsTab = ({ eventId, invitations }: InvitationsTabProps) => {
   const handleRevokeInvitation = async (email: string) => {
     await revokeInvitation(eventId, email)
-    setInvitations(invitations.filter((i) => i.email !== email))
   }
 
   const formSchema = z.object({
@@ -77,7 +71,6 @@ const InvitationsTab = ({
     } else {
       toast.success("Invitation sent")
       form.reset()
-      setInvitations([...invitations, { email: data.email, status: "pending" }])
     }
   }
 

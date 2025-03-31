@@ -182,22 +182,6 @@ export async function getEventInfo(eventId: string): Promise<EventViewReturn> {
   }
 }
 
-export async function getEventParticipants(eventId: string) {
-  return await fetchParticipants(eventId)
-}
-
-export async function getEventInvitations(eventId: string) {
-  return await fetchNotAcceptedInvitations(eventId)
-}
-
-export async function getEventExclusionRules(eventId: string) {
-  return await fetchExclusionRules(eventId)
-}
-
-export async function getEventAssignments(eventId: string) {
-  return await fetchAssignments(eventId)
-}
-
 // return query to fetch participants of an event
 function fetchParticipants(eventId: string) {
   return db

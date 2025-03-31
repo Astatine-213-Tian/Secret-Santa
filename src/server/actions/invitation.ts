@@ -1,5 +1,6 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import { and, eq, ne } from "drizzle-orm"
 import { normalizeEmail } from "validator"
 
@@ -54,6 +55,8 @@ export async function createInvitation(eventId: string, email: string) {
   const token = newInvitation[0]!.token
   const invitationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/invitation/${token}`
   console.log("invitationLink", invitationLink)
+
+  revalidatePath(`/dashboard/events/${eventId}`)
 }
 
 export async function acceptInvitation(token: string) {
@@ -116,6 +119,8 @@ export async function revokeInvitation(eventId: string, email: string) {
         eq(invitation.normalizedEmail, normalizedEmail)
       )
     )
+
+  revalidatePath(`/dashboard/events/${eventId}`)
 }
 
 // resend invitation and update the expiration date
@@ -151,6 +156,8 @@ export async function resendInvitation(eventId: string, email: string) {
   // TODO: send the invitation link to the participant
   const invitationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/invitation/${token}`
   console.log("invitationLink", invitationLink)
+
+  revalidatePath(`/dashboard/events/${eventId}`)
 }
 
 // --- Helper functions ---

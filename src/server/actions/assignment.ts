@@ -1,5 +1,6 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import { and, eq } from "drizzle-orm"
 
 import { getUserInfo } from "@/lib/auth/auth-server"
@@ -49,6 +50,8 @@ export async function deleteExclusionRule(
         eq(assignmentExclusion.forbiddenReceiverId, forbiddenReceiverId)
       )
     )
+
+  revalidatePath(`/dashboard/events/${eventId}`)
 }
 
 export async function drawAssignments(eventId: string) {
@@ -159,9 +162,7 @@ export async function drawAssignments(eventId: string) {
     }
   })
 
-  return {
-    data: assignments,
-  }
+  revalidatePath(`/dashboard/events/${eventId}`)
 }
 
 export async function editAssignment(
@@ -242,6 +243,8 @@ export async function editAssignment(
       .set({ drawCompleted: true })
       .where(eq(event.id, eventId))
   })
+
+  revalidatePath(`/dashboard/events/${eventId}`)
 }
 
 export async function clearAssignments(eventId: string) {
@@ -254,6 +257,8 @@ export async function clearAssignments(eventId: string) {
       .set({ drawCompleted: false })
       .where(eq(event.id, eventId))
   })
+
+  revalidatePath(`/dashboard/events/${eventId}`)
 }
 
 // --- Helper functions ---

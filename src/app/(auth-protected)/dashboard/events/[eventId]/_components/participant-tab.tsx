@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import { UserMinus } from "lucide-react"
+import { toast } from "sonner"
 
 import { removeParticipant } from "@/server/actions/participant"
 import { OrganizerViewEvent } from "@/server/queries/event"
@@ -43,16 +43,16 @@ interface ParticipantsTabProps {
 const ParticipantsTab = ({
   eventId,
   organizerId,
-  participants: initialParticipants,
+  participants,
 }: ParticipantsTabProps) => {
-  const [participants, setParticipants] = useState(initialParticipants)
-
   const handleRemoveParticipant = async (
     participantId: string,
     autoDraw: boolean
   ) => {
-    await removeParticipant(eventId, participantId, autoDraw)
-    setParticipants(participants.filter((p) => p.id !== participantId))
+    const res = await removeParticipant(eventId, participantId, autoDraw)
+    if (res?.error) {
+      toast.error(res.error)
+    }
   }
 
   return (

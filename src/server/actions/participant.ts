@@ -1,5 +1,6 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import { and, eq, or } from "drizzle-orm"
 
 import { getUserInfo } from "@/lib/auth/auth-server"
@@ -45,48 +46,52 @@ export async function removeParticipant(
     throw new Error("Cannot remove organizer from event")
   }
 
-  await db.transaction(async (tx) => {
-    // delete the participant from the event
-    const deletedParticipant = await tx
-      .delete(eventParticipant)
-      .where(
-        and(
-          eq(eventParticipant.eventId, eventId),
-          eq(eventParticipant.userId, participantId)
-        )
+  let error: string | null = null
+
+  // delete the participant from the event
+  const deletedParticipant = await db
+    .delete(eventParticipant)
+    .where(
+      and(
+        eq(eventParticipant.eventId, eventId),
+        eq(eventParticipant.userId, participantId)
       )
-      .returning()
+    )
+    .returning({
+      userId: eventParticipant.userId,
+    })
 
-    if (!deletedParticipant[0]?.userId) return
+  if (!deletedParticipant[0]?.userId) return
 
-    // delete exclusion rules related to the participant
-    await tx
-      .delete(assignmentExclusion)
-      .where(
-        or(
-          eq(assignmentExclusion.giverId, participantId),
-          eq(assignmentExclusion.forbiddenReceiverId, participantId)
-        )
+  // delete exclusion rules related to the participant
+  await db
+    .delete(assignmentExclusion)
+    .where(
+      or(
+        eq(assignmentExclusion.giverId, participantId),
+        eq(assignmentExclusion.forbiddenReceiverId, participantId)
       )
+    )
 
-    if (!eventOrganizer.drawCompleted) return
+  if (!eventOrganizer.drawCompleted) return
 
-    if (autoRedraw) {
-      // attempt to redraw the assignments
-      const res = await drawAssignments(eventId)
-      if (res.error) {
-        await clearAssignments(eventId)
-        return {
-          error: "Failed to redraw assignments. Assignments have been cleared.",
-        }
-      } else {
-        return res
-      }
-    } else {
-      // clear the assignments
+  if (autoRedraw) {
+    // attempt to redraw the assignments
+    const res = await drawAssignments(eventId)
+    if (res?.error) {
       await clearAssignments(eventId)
+      error = res.error
     }
-  })
+  } else {
+    // clear the assignments
+    await clearAssignments(eventId)
+  }
+
+  revalidatePath(`/dashboard/events/${eventId}`)
+
+  if (error) {
+    return { error }
+  }
 }
 
 /**
