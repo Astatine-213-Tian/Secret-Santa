@@ -119,7 +119,9 @@ const InvitationsTab = ({ eventId, invitations }: InvitationsTabProps) => {
                       variant={
                         invitation.status === "expired"
                           ? "destructive"
-                          : "warning"
+                          : invitation.status === "pending"
+                            ? "warning"
+                            : "secondary"
                       }
                       className="capitalize"
                     >
@@ -127,7 +129,7 @@ const InvitationsTab = ({ eventId, invitations }: InvitationsTabProps) => {
                     </Badge>
                   </TableCell>
                   <TableCell className="text-right">
-                    {invitation.status === "expired" && (
+                    {invitation.status !== "pending" && (
                       <Button
                         variant="outline"
                         size="icon"

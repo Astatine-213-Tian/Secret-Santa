@@ -1,6 +1,6 @@
 "use client"
 
-import { redirect } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 
 import {
@@ -14,10 +14,11 @@ interface ButtonProps {
 }
 
 export const AcceptInvitationButton = ({ token }: ButtonProps) => {
+  const router = useRouter()
   const handleAccept = async () => {
     const res = await acceptInvitation(token)
     if (res.data) {
-      redirect(`/events/${res.data.eventId}`)
+      router.push(`/events/${res.data.eventId}`)
     } else {
       toast.error(res.error)
     }

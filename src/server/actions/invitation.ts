@@ -63,6 +63,11 @@ export async function acceptInvitation(token: string) {
 
   const result = await db.query.invitation.findFirst({
     where: and(eq(invitation.token, token), eq(invitation.revoked, false)),
+    columns: {
+      expiresAt: true,
+      status: true,
+      eventId: true,
+    },
   })
 
   if (!result) {
@@ -94,7 +99,6 @@ export async function acceptInvitation(token: string) {
         userId: userId,
       })
     })
-
     return { data: { eventId: result.eventId } }
   } catch (error) {
     console.error(error)
@@ -150,6 +154,7 @@ export async function resendInvitation(eventId: string, email: string) {
     .update(invitation)
     .set({
       expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24), // 1 day
+      status: "pending",
       updatedAt: new Date(),
     })
     .where(

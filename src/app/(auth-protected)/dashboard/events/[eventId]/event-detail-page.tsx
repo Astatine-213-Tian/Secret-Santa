@@ -1,6 +1,5 @@
 "use client"
 
-import { redirect } from "next/navigation"
 import { Trash } from "lucide-react"
 
 import { ParticipantViewEvent } from "@/server/queries/event"
@@ -49,20 +48,22 @@ export default function EventDetailPage(params: {
   ]
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Event Details</CardTitle>
-      </CardHeader>
-      <CardContent className="p-6 space-y-4">
-        {event_details.map(({ title, value }) => (
-          <div className="space-y-3" key={title}>
-            <div className="font-bold">{title}</div>
-            <div>{value}</div>
-          </div>
-        ))}
-        <div className="font-bold">Organizer</div>
-        <UserInfoCard {...organizer} />
-      </CardContent>
+    <div className="flex flex-col gap-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Event Details</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {event_details.map(({ title, value }) => (
+            <div className="space-y-3" key={title}>
+              <div className="font-bold">{title}</div>
+              <div>{value}</div>
+            </div>
+          ))}
+          <div className="font-bold">Organizer</div>
+          <UserInfoCard {...organizer} />
+        </CardContent>
+      </Card>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl font-bold">Danger Zone</CardTitle>
@@ -88,6 +89,6 @@ export default function EventDetailPage(params: {
           </AlertDialog>
         </CardContent>
       </Card>
-    </Card>
+    </div>
   )
 }
