@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import moment from "moment"
 import { Calendar, momentLocalizer } from "react-big-calendar"
 
@@ -14,10 +13,14 @@ interface Event {
   eventId: string
   name: string
   eventDate: Date
-  location: Date
+  location: string
   drawCompleted?: boolean
   budget?: number
   secretFriend?: string
+}
+
+const EventCard = ({ event }: { event: Event }) => {
+  return <div>{event.name}</div>
 }
 
 export default function EventCalendar({
@@ -29,50 +32,11 @@ export default function EventCalendar({
 }) {
   // 2) State holding the calendar events.
   // Include any extra fields you need, e.g. "description", "type", etc.
-  const [events, setEvents] = useState([
-    {
-      id: "id",
-      title: "Sample Event",
-      start: new Date(),
-      end: new Date(),
-      description: "A short description of this event.",
-      type: "organized", // or "joined"
-    },
-  ])
-
-  // fetch user events on mount
-  useEffect(() => {
-    const joined = joinedEvents.map((event) => ({
-      id: event.eventId,
-      title: event.name,
-      start: event.eventDate,
-      end: event.eventDate,
-      description: `Prepare a ${event.budget} gift for ${event.secretFriend} at ${event.location}`,
-      type: "joined",
-    }))
-    const organized = organizedEvents.map((event) => ({
-      id: event.eventId,
-      title: event.name,
-      start: event.eventDate,
-      end: event.eventDate,
-      description: `Organized event at ${event.location}`,
-      type: "organized",
-    }))
-    setEvents([...joined, ...organized])
-  }, [])
-
-  // 3) Called when the user selects an empty slot (click or drag).
-  // Prompts for a title, then creates a new event.
-  const handleSelectSlot = ({ start, end }: { start: Date; end: Date }) => {
-    const title = prompt("Enter event title:")
-    if (title) {
-      setEvents([...events, { starwt, end, title }])
-    }
-  }
+  const events = joinedEvents.concat(organizedEvents)
 
   // redirect to event page on click
-  const handleSelectEvent = (event) => {
-    redirect(`/dashboard/events/${event.id}`)
+  const handleSelectEvent = (event: Event) => {
+    redirect(`/dashboard/events/${event.eventId}`)
   }
 
   return (
@@ -83,19 +47,16 @@ export default function EventCalendar({
       <Calendar
         localizer={localizer}
         events={events}
-        startAccessor="start"
-        endAccessor="end"
+        startAccessor="eventDate"
+        endAccessor="eventDate"
         // Height for the calendar container
         style={{ height: 500 }}
-        // Allows users to select empty slots to create new events
-        selectable
-        onSelectSlot={handleSelectSlot}
         // Called when an existing event is clicked
         onSelectEvent={handleSelectEvent}
         // Replace the default event rendering with our custom component
-        // components={{
-        //   event: EventCard,
-        // }}
+        components={{
+          event: EventCard,
+        }}
       />
     </div>
   )
