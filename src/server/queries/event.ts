@@ -25,9 +25,10 @@ export async function getOrganizedEvents() {
       eventDate: event.eventDate,
       location: event.location,
       drawCompleted: event.drawCompleted,
+      budget: event.budget,
     })
     .from(event)
-    .where(and(eq(event.organizerId, userId), gte(event.eventDate, new Date())))
+    .where(eq(event.organizerId, userId))
     .groupBy(event.id)
     .orderBy(desc(event.eventDate))
 
@@ -78,7 +79,7 @@ export interface OrganizerViewEvent {
   }[]
   invitations: {
     email: string
-    status: "pending" | "expired"
+    status: "pending" | "expired" | "rejected"
   }[]
   exclusionRules: {
     giver: {
@@ -155,7 +156,7 @@ export async function getEventInfo(eventId: string): Promise<EventViewReturn> {
   const [participants, invitations, exclusionRules, assignments] =
     await Promise.all([
       fetchParticipants(eventId),
-      fetchPendingInvitations(eventId),
+      fetchNotAcceptedInvitations(eventId),
       fetchExclusionRules(eventId),
       fetchAssignments(eventId),
     ])
@@ -194,20 +195,20 @@ function fetchParticipants(eventId: string) {
     .where(eq(eventParticipant.eventId, eventId))
 }
 
-// return query to fetch pending or expired invitations of an event
-function fetchPendingInvitations(eventId: string) {
+// return query to fetch expired invitations of an event
+function fetchNotAcceptedInvitations(eventId: string) {
   return db
     .select({
       email: invitation.email,
       status: sql<
-        "pending" | "expired"
-      >`CASE WHEN ${invitation.expiresAt} > now() THEN 'pending' ELSE 'expired' END`,
+        "pending" | "expired" | "rejected"
+      >`CASE WHEN ${invitation.expiresAt} < now() THEN 'expired' ELSE ${invitation.status}::text END`,
     })
     .from(invitation)
     .where(
       and(
         eq(invitation.eventId, eventId),
-        eq(invitation.accepted, false),
+        ne(invitation.status, "accepted"),
         eq(invitation.revoked, false)
       )
     )
@@ -266,7 +267,7 @@ export async function fetchUserGiftReceivers() {
   const userReceiver = alias(user, "receiver")
   const eventDetails = alias(event, "event")
 
-  return db
+  return await db
     .select({
       event: {
         id: eventDetails.id,

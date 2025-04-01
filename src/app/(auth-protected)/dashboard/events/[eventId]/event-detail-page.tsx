@@ -4,13 +4,10 @@ import { redirect } from "next/navigation"
 import { Trash } from "lucide-react"
 
 import { ParticipantViewEvent } from "@/server/queries/event"
-import { getProfile } from "@/server/queries/profile"
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,

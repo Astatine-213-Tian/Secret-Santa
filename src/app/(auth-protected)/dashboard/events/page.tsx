@@ -3,7 +3,7 @@ import { Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { getJoinedEvents, getOrganizedEvents } from "@/server/queries/event"
-import { buttonVariants } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button-variants"
 import { JoinedEventCard } from "@/components/joined-event-card"
 import { OrganizedEventCard } from "@/components/organized-event-card"
 
