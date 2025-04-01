@@ -18,7 +18,7 @@ export const AcceptInvitationButton = ({ token }: ButtonProps) => {
   const handleAccept = async () => {
     const res = await acceptInvitation(token)
     if (res.data) {
-      router.push(`/events/${res.data.eventId}`)
+      router.push(`/dashboard/events/${res.data.eventId}`)
     } else {
       toast.error(res.error)
     }
