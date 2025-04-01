@@ -7,31 +7,36 @@ const authClient = createAuthClient({
 
 const CALLBACK_URL = "/dashboard/events"
 
-async function signInWithGoogle() {
+interface WithCallbackUrl {
+  callbackUrl?: string | null
+}
+
+async function signInWithGoogle({ callbackUrl }: WithCallbackUrl) {
   await authClient.signIn.social({
     provider: "google",
-    callbackURL: CALLBACK_URL,
+    callbackURL: callbackUrl || CALLBACK_URL,
   })
 }
 
-async function signInWithGitHub() {
+async function signInWithGitHub({ callbackUrl }: WithCallbackUrl) {
   await authClient.signIn.social({
     provider: "github",
-    callbackURL: CALLBACK_URL,
+    callbackURL: callbackUrl || CALLBACK_URL,
   })
 }
 
 async function signInWithEmail({
   email,
   password,
+  callbackUrl,
 }: {
   email: string
   password: string
-}) {
+} & WithCallbackUrl) {
   return await authClient.signIn.email({
     email,
     password,
-    callbackURL: CALLBACK_URL,
+    callbackURL: callbackUrl || CALLBACK_URL,
   })
 }
 
@@ -39,16 +44,17 @@ async function signUpWithEmail({
   email,
   password,
   name,
+  callbackUrl,
 }: {
   email: string
   password: string
   name: string
-}) {
+} & WithCallbackUrl) {
   return await authClient.signUp.email({
     email,
     password,
     name,
-    callbackURL: CALLBACK_URL,
+    callbackURL: callbackUrl || CALLBACK_URL,
   })
 }
 

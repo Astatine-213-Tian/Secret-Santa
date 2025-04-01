@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -50,6 +50,9 @@ const formSchema = z
   })
 
 export default function SignUpPage() {
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl")
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,6 +72,7 @@ export default function SignUpPage() {
       name: values.name,
       email: values.email,
       password: values.password,
+      callbackUrl,
     })
     if (error) {
       toast.error(error.message)
@@ -93,7 +97,7 @@ export default function SignUpPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={signInWithGoogle}
+                onClick={() => signInWithGoogle({ callbackUrl })}
               >
                 <Google className="w-6 h-6" />
                 Sign up with Google
@@ -101,7 +105,7 @@ export default function SignUpPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={signInWithGitHub}
+                onClick={() => signInWithGitHub({ callbackUrl })}
               >
                 <GitHub className="w-6 h-6" />
                 Sign up with GitHub

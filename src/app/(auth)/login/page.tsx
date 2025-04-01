@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
@@ -40,6 +40,9 @@ const formSchema = z.object({
 })
 
 export default function LoginPage() {
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl")
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -79,7 +82,7 @@ export default function LoginPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={signInWithGoogle}
+                onClick={() => signInWithGoogle({ callbackUrl })}
               >
                 <Google className="w-6 h-6" />
                 Login with Google
@@ -87,7 +90,7 @@ export default function LoginPage() {
               <Button
                 variant="outline"
                 className="w-full"
-                onClick={signInWithGitHub}
+                onClick={() => signInWithGitHub({ callbackUrl })}
               >
                 <GitHub className="w-6 h-6" />
                 Login with GitHub

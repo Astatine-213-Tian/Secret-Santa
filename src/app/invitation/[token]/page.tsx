@@ -97,13 +97,13 @@ export default async function InvitationPage({
                   </p>
                 </div>
                 <Button asChild className="w-full" size="lg">
-                  <Link href={`/login?redirect=/invitation/${token}`}>
+                  <Link href={`/login?callbackUrl=/invitation/${token}`}>
                     <LogIn className="mr-2 h-4 w-4" />
                     Log In
                   </Link>
                 </Button>
                 <Button variant="outline" className="w-full" asChild>
-                  <Link href={`/sign-up?redirect=/invitation/${token}`}>
+                  <Link href={`/sign-up?callbackUrl=/invitation/${token}`}>
                     <UserPlus className="mr-2 h-4 w-4" />
                     Create Account
                   </Link>
