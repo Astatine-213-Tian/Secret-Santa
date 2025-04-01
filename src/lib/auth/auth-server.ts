@@ -88,3 +88,14 @@ export async function getUserInfo() {
   }
   return session.user
 }
+
+/**
+ * Get the session from the session cookie
+ * @returns The session object
+ */
+export async function getSession() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+  return session
+}

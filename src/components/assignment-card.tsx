@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/popover"
 import { UserInfoCard } from "./user-profile-card"
 
-interface AssigmentParams {
+interface AssignmentParams {
   event: {
     id: string
     name: string
@@ -25,23 +25,23 @@ interface AssigmentParams {
 }
 
 /**
- * Display information about an assigment.
+ * Display information about an assignment.
  * Links to details about both: gift-receiver (User), event-details (Event)
  * @param assignee_details not specified if its a secret
  */
-export function AssigmentCard(assigment: AssigmentParams) {
+export function AssignmentCard(assignment: AssignmentParams) {
   const [receiverProfileData, setReceiverProfileData] = useState<
     AccessModeMap["my_gift_receiver"] | null
   >(null)
 
   // If undefined, it means it's a secret.
   const assignee =
-    assigment.assignee === "secret"
+    assignment.assignee === "secret"
       ? {
           id: "Secret",
           name: "Secret",
         }
-      : assigment.assignee
+      : assignment.assignee
 
   // When the user clicks the popover, fetch the user data.
   async function handleOpen() {
@@ -56,9 +56,9 @@ export function AssigmentCard(assigment: AssigmentParams) {
       <CardHeader>
         <Popover>
           <PopoverTrigger
-            disabled={assigment.assignee === "secret"}
+            disabled={assignment.assignee === "secret"}
             className={
-              assigment.assignee === "secret"
+              assignment.assignee === "secret"
                 ? "w-[max-content]"
                 : "w-[max-content] hover:font-bold duration-300"
             }
@@ -70,7 +70,7 @@ export function AssigmentCard(assigment: AssigmentParams) {
             <UserInfoCard {...receiverProfileData} />
           </PopoverContent>
         </Popover>
-        <CardDescription>{assigment.event.name}</CardDescription>
+        <CardDescription>{assignment.event.name}</CardDescription>
       </CardHeader>
     </Card>
   )
