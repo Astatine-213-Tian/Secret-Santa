@@ -47,13 +47,12 @@ export async function createInvitation(eventId: string, email: string) {
     .onConflictDoNothing()
     .returning()
 
-  if (!newInvitation[0]!.token) {
-    throw new Error("Invitation already exists")
+  if (newInvitation.length === 0) {
+    return { error: "Invitation already exists" }
   }
 
   // TODO: send the invitation link to the participant
-  const token = newInvitation[0]!.token
-  const invitationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/invitation/${token}`
+  const invitationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/invitation/${newInvitation[0]!.token}`
   console.log("invitationLink", invitationLink)
 
   revalidatePath(`/dashboard/events/${eventId}`)
