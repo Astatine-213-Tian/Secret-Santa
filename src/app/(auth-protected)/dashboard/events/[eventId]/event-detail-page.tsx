@@ -3,11 +3,9 @@
 import { redirect } from "next/navigation"
 import { Trash } from "lucide-react"
 
-import { removeSelfFromEvent } from "@/server/actions/participant"
 import { ParticipantViewEvent } from "@/server/queries/event"
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
@@ -16,7 +14,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { buttonVariants } from "@/components/ui/button-variants"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { UserInfoCard } from "@/components/user-profile-card"
 
@@ -51,12 +48,6 @@ export default function EventDetailPage(params: {
     },
   ]
 
-  // Handle delete button click
-  const handleLeave = () => {
-    removeSelfFromEvent(event.details.id)
-    redirect("/") // Redirects after form submission
-  }
-
   return (
     <Card>
       <CardHeader>
@@ -87,19 +78,11 @@ export default function EventDetailPage(params: {
             <AlertDialogContent>
               <AlertDialogHeader>
                 <AlertDialogTitle>
-                  Are you sure you want to leave this event?
+                  Please contact your Organizer to leave the event.
                 </AlertDialogTitle>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={handleLeave}
-                  className={buttonVariants({
-                    variant: "destructive",
-                  })}
-                >
-                  Leave
-                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

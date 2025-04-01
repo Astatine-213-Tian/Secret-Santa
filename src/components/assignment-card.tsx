@@ -11,30 +11,42 @@ import {
 } from "@/components/ui/popover"
 import { UserInfoCard } from "./user-profile-card"
 
-/**
- * Links to details about both: gift-receiver (User), event-details (Event)
- */
-export function AssignmentCard(assignment: {
+interface AssigmentParams {
   event: {
     id: string
     name: string
   }
-  receiver: {
-    id: string
-    name: string
-  }
-}) {
+  assignee:
+    | "secret"
+    | {
+        id: string
+        name: string
+      }
+}
+
+/**
+ * Display information about an assigment.
+ * Links to details about both: gift-receiver (User), event-details (Event)
+ * @param assignee_details not specified if its a secret
+ */
+export function AssigmentCard(assigment: AssigmentParams) {
   const [receiverProfileData, setReceiverProfileData] = useState<
     AccessModeMap["my_gift_receiver"] | null
   >(null)
 
+  // If undefined, it means it's a secret.
+  const assignee =
+    assigment.assignee === "secret"
+      ? {
+          id: "Secret",
+          name: "Secret",
+        }
+      : assigment.assignee
+
   // When the user clicks the popover, fetch the user data.
   async function handleOpen() {
     if (!receiverProfileData) {
-      const result = await getProfile(
-        "my_gift_receiver",
-        assignment.receiver.id
-      )
+      const result = await getProfile("my_gift_receiver", assignee.id)
       setReceiverProfileData(result)
     }
   }
@@ -44,10 +56,15 @@ export function AssignmentCard(assignment: {
       <CardHeader>
         <Popover>
           <PopoverTrigger
-            className="w-[max-content] hover:font-bold duration-300"
+            disabled={assigment.assignee === "secret"}
+            className={
+              assigment.assignee === "secret"
+                ? "w-[max-content]"
+                : "w-[max-content] hover:font-bold duration-300"
+            }
             onClick={handleOpen}
           >
-            {assignment.receiver.name}
+            {assignee.name}
           </PopoverTrigger>
           <PopoverContent className="w-full">
             <UserInfoCard {...receiverProfileData} />
