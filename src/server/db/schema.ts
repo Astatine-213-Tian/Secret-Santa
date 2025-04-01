@@ -119,7 +119,7 @@ export const assignment = pgTable(
   ]
 )
 
-// ADDED: gift-submit details (one-2-one w' assigment)
+// ADDED: gift-submit details (one-2-one w' assignment)
 export const giftSubmit = pgTable(
   "gift_submit",
   {

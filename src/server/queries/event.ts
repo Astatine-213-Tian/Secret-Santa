@@ -259,7 +259,7 @@ function fetchAssignments(eventId: string) {
 }
 
 /**
- * Fetch All Assigments for the current user
+ * Fetch All Assignments for the current user
  */
 export async function fetchUserGiftReceivers() {
   const { id: userId } = await getUserInfo()

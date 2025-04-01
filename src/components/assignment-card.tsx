@@ -7,7 +7,7 @@ import { z } from "zod"
 import { GiftSubmitFormData } from "@/lib/types"
 import { submitGift } from "@/server/actions/giftSubmit"
 import { AccessModeMap, getProfile } from "@/server/queries/profile"
-import { Card, CardDescription, CardHeader } from "@/components/ui/card"
+import { Card, CardHeader } from "@/components/ui/card"
 import {
   Popover,
   PopoverContent,
@@ -23,12 +23,12 @@ export const giftSubmitFormSchema = z.object({
   note: z.string().optional(),
 })
 
-// Assigment is either: Receiver or Gifter (type of current user)
+// Assignment is either: Receiver or Gifter (type of current user)
 
 /**
  * This is a receiver of the current user.
  */
-export function ReceiverAssigmentCard(assignment: {
+export function ReceiverAssignmentCard(assignment: {
   event: {
     id: string
     name: string
@@ -87,11 +87,11 @@ export function ReceiverAssigmentCard(assignment: {
 }
 
 /**
- * Display information about an assigment.
+ * Display information about an assignment.
  * Links to details about both: gift-receiver (User), event-details (Event)
  * @param assignee_details not specified if its a secret
  */
-export function GifterAssigmentCard(assignment: {
+export function GifterAssignmentCard(assignment: {
   event: {
     id: string
     name: string
