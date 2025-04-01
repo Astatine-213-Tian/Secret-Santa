@@ -1,17 +1,9 @@
 "use client"
 
-import { InferModel } from "drizzle-orm"
 import { FileText, Gift, User } from "lucide-react"
 
 import { GiftPreferences } from "@/lib/types"
-import { user } from "@/server/db/schema"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar } from "./ui/avatar"
 
@@ -104,7 +96,13 @@ function GiftPreferencesCard(prefs: GiftPreferences) {
  * Many of the fields may not be present do to the access-mode specified
  * when fetching this information (server-side).
  */
-export function UserInfoCard(userInfo: Partial<InferModel<typeof user>>) {
+export function UserInfoCard(userInfo: {
+  name?: string
+  email?: string
+  bio?: string | null
+  image?: string | null
+  giftPreferences?: GiftPreferences | null
+}) {
   return (
     <div>
       <ProfileInfoCard
