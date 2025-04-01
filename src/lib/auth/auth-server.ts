@@ -72,6 +72,10 @@ export const auth = betterAuth({
     generateId: false,
   },
   plugins: [emailHarmony()],
+  rateLimit: {
+    window: 10, // time window in seconds
+    max: 100, // max requests in the window
+  },
 })
 
 /**
