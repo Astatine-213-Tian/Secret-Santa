@@ -1,6 +1,6 @@
 import "server-only"
 
-import { and, asc, desc, eq, gte, ne, sql } from "drizzle-orm"
+import { and, asc, desc, eq, ne, sql } from "drizzle-orm"
 import { alias } from "drizzle-orm/pg-core"
 
 import { getUserInfo } from "@/lib/auth/auth-server"
@@ -53,8 +53,7 @@ export async function getJoinedEvents() {
       event,
       and(
         eq(eventParticipant.eventId, event.id),
-        ne(event.organizerId, userId), // exclude events that the user is the organizer of
-        gte(event.eventDate, new Date())
+        ne(event.organizerId, userId) // exclude events that the user is the organizer of
       )
     )
     .leftJoin(
@@ -67,6 +66,7 @@ export async function getJoinedEvents() {
     .leftJoin(user, eq(assignment.receiverId, user.id))
     .orderBy(desc(event.eventDate))
 
+  console.log("events", events)
   return events
 }
 
