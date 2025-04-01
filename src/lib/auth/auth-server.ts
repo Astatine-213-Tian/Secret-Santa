@@ -5,6 +5,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle"
 
 import { db } from "@/server/db"
 import { renderVerificationEmail } from "@/components/emails/email-verification"
+import { renderPasswordResetEmail } from "@/components/emails/password-reset"
 import { sendEmail } from "../email"
 import { hashPassword, verifyPassword } from "../password"
 
@@ -29,10 +30,17 @@ export const auth = betterAuth({
     minPasswordLength: 8,
     maxPasswordLength: 16,
     requireEmailVerification: true,
+    resetPasswordTokenExpiresIn: 3600, // 1 hour
     sendResetPassword: async ({ user, url }) => {
-      console.log("Reset password user", user)
-      console.log("Reset password url", url)
-      // TODO: Send reset email
+      await sendEmail({
+        to: user.email,
+        subject: "Reset your password",
+        text: `Click the link to reset your password: ${url}`,
+        html: await renderPasswordResetEmail({
+          resetPasswordLink: url,
+          expiryTime: "1 hour",
+        }),
+      })
     },
   },
   emailVerification: {
