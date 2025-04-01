@@ -22,24 +22,26 @@ export default async function GiftsPage() {
   ))
 
   return (
-    <div className="flex flex-col gap-3">
-      <h1 className="text-3xl font-semibold text-gray-800">Secret Friends</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-3">
+        Secret Friends
+      </h1>
       {!receivers || !givers ? (
         <div>You have no gift assignments yet. Try joining an event!</div>
       ) : (
         <>
           {/* PEOPLE YOUR ASSIGNED TO */}
-          <h2 className="text-2xl font-semibold text-gray-800">
-            My Assignments's
+          <h2 className="text-xl font-semibold text-gray-800">
+            My Assignments
           </h2>
-          <div className="grid mt-6 grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8">
             {receiversUi}
           </div>
           {/* PEOPLE ASSIGNED TO YOU */}
-          <h2 className="text-2xl font-semibold text-gray-800">
+          <h2 className="text-xl font-semibold text-gray-800">
             My Gift Givers
           </h2>
-          <div className="grid mt-6 grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8">
             {giversUi}
           </div>
         </>

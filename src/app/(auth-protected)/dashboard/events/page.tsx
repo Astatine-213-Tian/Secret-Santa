@@ -14,7 +14,7 @@ export default async function EventsPage() {
   return (
     <div className="flex flex-col gap-6">
       <h1 className="text-3xl font-semibold text-gray-800">Your Events</h1>
-      <div className="flex items-center justify-between mt-6">
+      <div className="flex items-center justify-between mt-3">
         <h2 className="text-xl font-semibold">Events You're Organizing</h2>
 
         <Link
