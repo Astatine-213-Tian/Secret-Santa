@@ -5,11 +5,31 @@ import { and, eq, ne } from "drizzle-orm"
 import { normalizeEmail } from "validator"
 
 import { getUserInfo } from "@/lib/auth/auth-server"
+import { sendEmail } from "@/lib/email"
+import { renderSecretSantaInvitationEmail } from "@/components/emails/event-invitation"
 import { db } from "../db"
 import { event, eventParticipant, invitation, user } from "../db/schema"
 
 export async function createInvitation(eventId: string, email: string) {
-  await checkOrganizer(eventId)
+  const { id: userId } = await getUserInfo()
+  const eventDetails = await db.query.event.findFirst({
+    where: and(eq(event.id, eventId), eq(event.organizerId, userId)),
+    with: {
+      organizer: {
+        columns: {
+          name: true,
+        },
+      },
+    },
+    columns: {
+      name: true,
+      eventDate: true,
+      location: true,
+    },
+  })
+  if (!eventDetails) {
+    throw new Error("Unauthorized")
+  }
 
   const normalizedEmail = normalizeEmail(email)
   if (!normalizedEmail) {
@@ -53,7 +73,17 @@ export async function createInvitation(eventId: string, email: string) {
 
   // TODO: send the invitation link to the participant
   const invitationLink = `${process.env.NEXT_PUBLIC_BASE_URL}/invitation/${newInvitation[0]!.token}`
-  console.log("invitationLink", invitationLink)
+  await sendEmail({
+    to: email,
+    subject: "You've been invited to a Secret Santa event",
+    html: await renderSecretSantaInvitationEmail({
+      eventName: eventDetails.name,
+      eventDate: eventDetails.eventDate.toLocaleString(),
+      invitationLink: invitationLink,
+      organizerName: eventDetails.organizer.name,
+    }),
+    text: "You've been invited to a Secret Santa event",
+  })
 
   revalidatePath(`/dashboard/events/${eventId}`)
 }

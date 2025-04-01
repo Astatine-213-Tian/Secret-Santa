@@ -1,3 +1,4 @@
+import type React from "react"
 import {
   Body,
   Button,
@@ -11,37 +12,43 @@ import {
   Text,
 } from "@react-email/components"
 
-interface VerificationEmailProps {
-  username: string
-  verificationLink: string
+interface SecretSantaInvitationProps {
+  eventName: string
+  eventDate: string
+  invitationLink: string
+  organizerName: string
 }
 
-const VerificationEmail: React.FC<VerificationEmailProps> = ({
-  username,
-  verificationLink,
+const SecretSantaInvitationEmail: React.FC<SecretSantaInvitationProps> = ({
+  eventName,
+  eventDate,
+  invitationLink,
+  organizerName,
 }) => {
   return (
     <Html>
       <Head />
-      <Preview>Verify Your Email Address</Preview>
+      <Preview>You've Been Invited to a Secret Santa Event!</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={content}>
-            <Heading style={heading}>Verify Your Email Address</Heading>
+            <Heading style={heading}>Secret Santa Invitation</Heading>
 
             <Section style={userGreeting}>
-              <Text style={greetingText}>Hello, {username}! 👋</Text>
+              <Text style={greetingText}>You're Invited! 🎅🎄</Text>
             </Section>
 
             <Text style={paragraph}>
-              Thank you for signing up! To complete your registration and
-              activate your account, please verify your email address by
-              clicking the button below.
+              You've been invited to join the <b>{eventName}</b> Secret Santa
+              gift exchange! The gift exchange will take place on{" "}
+              <b>{eventDate}</b>. To participate and be assigned your gift
+              recipient, please accept the invitation by clicking the button
+              below.
             </Text>
 
             <Section style={buttonContainer}>
-              <Button href={verificationLink} style={button}>
-                Verify Email Address
+              <Button href={invitationLink} style={button}>
+                Accept Invitation
               </Button>
             </Section>
 
@@ -51,16 +58,22 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
             </Text>
 
             <Section style={linkSection}>
-              <Text style={linkText}>{verificationLink}</Text>
+              <Text style={linkText}>{invitationLink}</Text>
             </Section>
+
+            <Text style={paragraph}>
+              Once you accept, you'll be randomly assigned someone to give a
+              gift to. Don't worry, the identity of your Secret Santa will
+              remain a mystery until the big day!
+            </Text>
 
             <Section style={footer}>
               <Text style={footerText}>
-                This link will expire in 24 hours. If you didn't create an
-                account, please ignore this email or contact our support team.
+                This invitation was sent by {organizerName}. If you believe you
+                received this invitation in error, please ignore this email.
               </Text>
               <Text style={copyrightText}>
-                © {new Date().getFullYear()} Your Company Name. All rights
+                © {new Date().getFullYear()} Secret Santa App. All rights
                 reserved.
               </Text>
             </Section>
@@ -71,26 +84,31 @@ const VerificationEmail: React.FC<VerificationEmailProps> = ({
   )
 }
 
-type VerificationEmailWithPreview = React.FC<VerificationEmailProps> & {
-  PreviewProps: VerificationEmailProps
+type SecretSantaInvitationWithPreview = React.FC<SecretSantaInvitationProps> & {
+  PreviewProps: SecretSantaInvitationProps
 }
-;(VerificationEmail as VerificationEmailWithPreview).PreviewProps = {
-  username: "John Doe",
-  verificationLink: "https://example.com/verify",
-}
+;(SecretSantaInvitationEmail as SecretSantaInvitationWithPreview).PreviewProps =
+  {
+    eventName: "Office Holiday Party",
+    eventDate: "December 15, 2025",
+    invitationLink: "https://secretsanta.example.com/accept/abc123",
+    organizerName: "John Doe",
+  }
 
-export const renderVerificationEmail = async (
-  props: VerificationEmailProps
+export const renderSecretSantaInvitationEmail = async (
+  props: SecretSantaInvitationProps
 ) => {
   return await render(
-    <VerificationEmail
-      username={props.username}
-      verificationLink={props.verificationLink}
+    <SecretSantaInvitationEmail
+      eventName={props.eventName}
+      eventDate={props.eventDate}
+      invitationLink={props.invitationLink}
+      organizerName={props.organizerName}
     />
   )
 }
 
-export default VerificationEmail
+export default SecretSantaInvitationEmail
 
 // Styles
 const main = {
@@ -113,7 +131,7 @@ const content = {
 }
 
 const heading = {
-  color: "#333333",
+  color: "#c62828", // Red color for Christmas theme
   fontSize: "24px",
   fontWeight: "bold",
   textAlign: "center" as const,
@@ -122,13 +140,13 @@ const heading = {
 
 const userGreeting = {
   backgroundColor: "#f0f8ff",
-  borderLeft: "4px solid #007bff",
+  borderLeft: "4px solid #2e7d32", // Green color for Christmas theme
   padding: "15px",
   marginBottom: "20px",
 }
 
 const greetingText = {
-  color: "#007bff",
+  color: "#2e7d32", // Green color for Christmas theme
   margin: "0",
   fontSize: "16px",
 }
@@ -152,7 +170,7 @@ const buttonContainer = {
 }
 
 const button = {
-  backgroundColor: "#007bff",
+  backgroundColor: "#c62828", // Red color for Christmas theme
   color: "#ffffff",
   padding: "12px 24px",
   borderRadius: "5px",
