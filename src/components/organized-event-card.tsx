@@ -34,19 +34,19 @@ export const OrganizedEventCard = ({
       <CardContent className="flex-grow flex flex-col justify-between pt-0">
         <div className="space-y-2">
           <p className="text-sm text-gray-600 flex items-center">
-            <MapPin className="w-4 h-4 mr-1" />
+            <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
             Location:&nbsp;
-            <span className="font-medium">{location}</span>
+            <span className="font-medium line-clamp-1">{location}</span>
           </p>
           <p className="text-sm text-gray-600 flex items-center">
-            <CalendarClock className="w-4 h-4 mr-1" />
+            <CalendarClock className="w-4 h-4 mr-1 flex-shrink-0" />
             Draw Status:&nbsp;
             <span className="font-medium">
               {drawCompleted ? "Completed" : "Pending"}
             </span>
           </p>
           <p className="text-sm text-gray-600 flex items-center">
-            <DollarSign className="w-4 h-4 mr-1" />
+            <DollarSign className="w-4 h-4 mr-1 flex-shrink-0" />
             Budget:&nbsp;
             <span className="font-medium">{budget}</span>
           </p>

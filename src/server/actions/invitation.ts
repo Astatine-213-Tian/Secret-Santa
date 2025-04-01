@@ -79,22 +79,37 @@ export async function acceptInvitation(token: string) {
     return { error: "Invitation already rejected" }
   }
 
-  await db.transaction(async (tx) => {
-    await tx
-      .update(invitation)
-      .set({
-        status: "accepted",
-        updatedAt: new Date(),
+  try {
+    await db.transaction(async (tx) => {
+      await tx
+        .update(invitation)
+        .set({
+          status: "accepted",
+          updatedAt: new Date(),
+        })
+        .where(eq(invitation.token, token))
+
+      await tx.insert(eventParticipant).values({
+        eventId: result.eventId,
+        userId: userId,
       })
-      .where(eq(invitation.token, token))
-
-    await tx.insert(eventParticipant).values({
-      eventId: result.eventId,
-      userId: userId,
     })
-  })
 
-  return { success: "Invitation accepted" }
+    return { data: { eventId: result.eventId } }
+  } catch (error) {
+    console.error(error)
+    return { error: "You're already a participant of this event" }
+  }
+}
+
+export async function declineInvitation(token: string) {
+  await db
+    .update(invitation)
+    .set({
+      status: "rejected",
+      updatedAt: new Date(),
+    })
+    .where(eq(invitation.token, token))
 }
 
 // soft delete the invitation

@@ -28,7 +28,7 @@ export async function getOrganizedEvents() {
       budget: event.budget,
     })
     .from(event)
-    .where(and(eq(event.organizerId, userId), gte(event.eventDate, new Date())))
+    .where(eq(event.organizerId, userId))
     .groupBy(event.id)
     .orderBy(desc(event.eventDate))
 

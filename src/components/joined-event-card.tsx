@@ -34,17 +34,17 @@ export const JoinedEventCard = ({
       <CardContent className="flex-grow flex flex-col justify-between pt-0">
         <div className="space-y-2">
           <p className="text-sm text-gray-600 flex items-center">
-            <MapPin className="w-4 h-4 mr-1" />
+            <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
             Location:&nbsp;
-            <span className="font-medium">{location}</span>
+            <span className="font-medium line-clamp-1">{location}</span>
           </p>
           <p className="text-sm text-gray-600 flex items-center">
-            <CircleDollarSign className="w-4 h-4 mr-1" />
+            <CircleDollarSign className="w-4 h-4 mr-1 flex-shrink-0" />
             Budget:&nbsp;
             <span className="font-medium">{budget}</span>
           </p>
           <p className="text-sm text-gray-600 flex items-center">
-            <Gift className="w-4 h-4 mr-1" />
+            <Gift className="w-4 h-4 mr-1 flex-shrink-0" />
             Secret Friend:&nbsp;
             <span className="font-medium">{secretFriend}</span>
           </p>
