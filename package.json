@@ -66,6 +66,7 @@
     "@types/node": "^22.10.6",
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^19.0.7",
+    "@types/react-big-calendar": "^1.16.1",
     "@types/react-dom": "^19.0.3",
     "@types/validator": "^13.12.3",
     "dotenv": "^16.4.5",
