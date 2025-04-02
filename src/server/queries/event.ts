@@ -66,7 +66,6 @@ export async function getJoinedEvents() {
     .leftJoin(user, eq(assignment.receiverId, user.id))
     .orderBy(desc(event.eventDate))
 
-  console.log("events", events)
   return events
 }
 

@@ -168,7 +168,7 @@ export const invitation = pgTable(
   (table) => [
     uniqueIndex("invitation_event_id_normalized_email_unique")
       .on(table.eventId, table.normalizedEmail)
-      .where(sql`${table.revoked} = false`),
+      .where(sql`${table.revoked} = false AND ${table.status} <> 'accepted'`),
   ]
 )
 

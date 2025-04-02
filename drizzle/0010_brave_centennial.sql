@@ -1,0 +1,2 @@
+DROP INDEX "invitation_event_id_normalized_email_unique";--> statement-breakpoint
+CREATE UNIQUE INDEX "invitation_event_id_normalized_email_unique" ON "invitation" USING btree ("event_id","normalized_email") WHERE "invitation"."revoked" = false AND "invitation"."status" <> 'accepted';

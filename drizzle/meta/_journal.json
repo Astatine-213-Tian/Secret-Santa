@@ -71,6 +71,13 @@
       "when": 1743454402655,
       "tag": "0009_cultured_owl",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1743636149716,
+      "tag": "0010_brave_centennial",
+      "breakpoints": true
     }
   ]
 }
