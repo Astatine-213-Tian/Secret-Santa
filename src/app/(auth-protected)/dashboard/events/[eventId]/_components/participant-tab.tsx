@@ -1,5 +1,6 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { UserMinus } from "lucide-react"
 import { toast } from "sonner"
 
@@ -45,6 +46,8 @@ const ParticipantsTab = ({
   organizerId,
   participants,
 }: ParticipantsTabProps) => {
+  const router = useRouter()
+
   const handleRemoveParticipant = async (
     participantId: string,
     autoDraw: boolean
@@ -52,6 +55,8 @@ const ParticipantsTab = ({
     const res = await removeParticipant(eventId, participantId, autoDraw)
     if (res?.error) {
       toast.error(res.error)
+    } else {
+      router.refresh()
     }
   }
 
