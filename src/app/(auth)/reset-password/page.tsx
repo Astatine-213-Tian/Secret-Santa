@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -42,7 +42,7 @@ const formSchema = z
     path: ["confirmPassword"],
   })
 
-export default function ResetPasswordPage() {
+function ResetPasswordClient() {
   const searchParams = useSearchParams()
   const [token, setToken] = useState<string | null>(null)
   const [isResetComplete, setIsResetComplete] = useState(false)
@@ -183,5 +183,13 @@ export default function ResetPasswordPage() {
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense>
+      <ResetPasswordClient />
+    </Suspense>
   )
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -49,7 +49,7 @@ const formSchema = z
     path: ["confirmPassword"],
   })
 
-export default function SignUpPage() {
+function SignUpClient() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl")
 
@@ -205,5 +205,13 @@ export default function SignUpPage() {
         <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
       </div>
     </div>
+  )
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense>
+      <SignUpClient />
+    </Suspense>
   )
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { Mail } from "lucide-react"
@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export default function VerifyEmailPage() {
+function VerifyEmailClient() {
   const searchParams = useSearchParams()
   const [email, setEmail] = useState<string>("")
   const [isResending, setIsResending] = useState(false)
@@ -96,5 +96,13 @@ export default function VerifyEmailPage() {
         </a>
       </div>
     </div>
+  )
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense>
+      <VerifyEmailClient />
+    </Suspense>
   )
 }
