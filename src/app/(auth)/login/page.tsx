@@ -1,5 +1,6 @@
 "use client"
 
+import { Suspense } from "react"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -39,7 +40,7 @@ const formSchema = z.object({
   }),
 })
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl")
 
@@ -167,5 +168,13 @@ export default function LoginPage() {
         <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginForm />
+    </Suspense>
   )
 }
